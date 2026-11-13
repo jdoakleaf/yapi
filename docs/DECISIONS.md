@@ -83,3 +83,30 @@ Bu dosya projede alınan önemli teknik ve ürün kararlarını, gerekçelerini 
 **Karar:** Tailwind CSS 4.3.3 kuruldu. shadcn/ui kurulumu Faz 5'te admin paneli bileşen ihtiyacı başladığında yapılacak. Faz 1'de erken eklemek gereksiz bağımlılık ekler.
 **Gerekçe:** shadcn/ui CLI kurulumu bazı dosyaları (globals.css, tailwind config) değiştirir. Özelleşmiş tema sistemi kurulmadan önce bu değişikliği yapmak çakışma riski yaratır.
 **Alternatifler:** Erken kurulum (reddedildi — gereksiz kompleksite).
+
+---
+
+### D-009 — PostgreSQL Kurulum Yöntemi
+
+**Tarih:** 2026-11-13
+**Karar:** EDB (get.enterprisedb.com) bu ortamdan 403 yanıtı veriyor. PostgresPro Standard 17 (repo.postgrespro.ru) kurulumu deneniyor — farklı sunucu üzerinden aynı PostgreSQL motoru.
+**Gerekçe:** Prisma 5 PostgreSQL 17 ile tam uyumlu. PostgresPro Standard, resmi PostgreSQL 17 üzerine kurulu ticari dağıtım.
+**Alternatifler:** Docker (kurulu değil), EDB (erişim engeli), Scoop (kurulu değil).
+
+---
+
+### D-010 — Auth Çözümü: Auth.js (NextAuth v5)
+
+**Tarih:** 2026-11-13
+**Karar:** Faz 3 için **Auth.js (NextAuth v5)** seçildi.
+**Gerekçe:**
+- Next.js App Router ile native entegrasyon
+- Prisma adapter mevcut (PrismaAdapter)
+- Credentials provider ile özel kullanıcı/parola akışı
+- HttpOnly cookie, CSRF koruması yerleşik
+- Aktif bakım, geniş topluluk
+- Session, JWT veya DB session seçenekleri
+**Alternatifler:**
+- Lucia Auth (daha az bağımlılık ama daha az ekosistem)
+- Özel JWT (tekrar yazma riski, güvenlik yükü)
+**Durum:** Faz 3'te kurulacak (Prisma bağlantısı gerekli).
