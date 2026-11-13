@@ -92,19 +92,27 @@ mevcut.
 
 ## Faz 3 --- Kimlik doğrulama ve yetkilendirme
 
--   [ ] Güvenilir auth çözümü seç ve karar günlüğüne yaz.
--   [ ] Admin login/logout.
--   [ ] Güvenli session/cookie ayarları.
--   [ ] Parola hash ve parola politikası.
--   [ ] Rate limiting / brute-force koruması.
--   [ ] Roller ve izinler.
--   [ ] Server-side RBAC helper/middleware.
--   [ ] Yetkisiz erişim testleri.
--   [ ] Audit log temel altyapısı.
--   [ ] Progress güncellemesi.
+-   [x] Güvenilir auth çözümü seç ve karar günlüğüne yaz.
+    > Auth.js (NextAuth v5) + PrismaAdapter seçildi (D-010). next-auth@5.0.0-beta.32, @auth/prisma-adapter@2.11.3.
+-   [x] Admin login/logout.
+    > /admin/login sayfası (useActionState), loginAction server action, logoutAction. /api/auth/[...nextauth] route.
+-   [x] Güvenli session/cookie ayarları.
+    > JWT strategy, 8 saat maxAge, HttpOnly cookie, NEXTAUTH_SECRET zorunlu.
+-   [x] Parola hash ve parola politikası.
+    > scrypt (Node.js built-in) ile hash/verify. Timing-safe karşılaştırma. 12+ karakter zorunlu (create-admin).
+-   [x] Rate limiting / brute-force koruması.
+    > In-memory rate limiter: 5 deneme / 15 dakika. Üretimde Redis önerilir (belgelendi).
+-   [x] Roller ve izinler.
+    > userRoles pivot tablosu üzerinden. RBAC helper: requireAuth, requireRole, hasRole.
+-   [x] Server-side RBAC helper/middleware.
+    > src/lib/auth/rbac.ts — requireAuth, requireRole(minRole), hasRole(minRole).
+-   [x] Yetkisiz erişim testleri.
+    > GET /admin (yetkisiz) → 307 → /admin/login ✅. Public route'lar 200 ✅. Test script: scripts/test-auth.mjs.
+-   [x] Audit log temel altyapısı.
+    > AuditLog modeli Faz 2'de oluşturuldu. LOGIN, LOGIN_FAILED, LOGIN_RATE_LIMITED, ADMIN_CREATED kayıtları aktif.
+-   [x] Progress güncellemesi.
 
-**Faz 3 kabul:** Yetkisiz kullanıcı admin verisine ve mutation
-işlemlerine erişemiyor.
+**Faz 3 kabul:** ✅ Yetkisiz kullanıcı admin verisine ve mutation işlemlerine erişemiyor. (2026-11-13)
 
 ## Faz 4 --- Medya ve ortak CMS altyapısı
 

@@ -3,46 +3,50 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-13T20:14:00+03:00
-- **Aktif faz:** Faz 3 — Kimlik doğrulama ve yetkilendirme
-- **Son tamamlanan görev:** Faz 2 kabul kriterleri geçildi — migration + seed doğrulandı
-- **Devam eden görev:** Faz 3 başlayacak (kullanıcı onayı bekleniyor)
-- **Sıradaki tek adım:** Auth.js (NextAuth v5) + PrismaAdapter kurulumu
+- **Son güncelleme:** 2026-11-13T20:25:00+03:00
+- **Aktif faz:** Faz 4 — Medya ve ortak CMS altyapısı
+- **Son tamamlanan görev:** Faz 3 — Auth/RBAC tamamlandı ve test edildi
+- **Devam eden görev:** Faz 4 başlayacak (kullanıcı onayı bekleniyor)
+- **Sıradaki tek adım:** Medya depolama adaptörü + upload altyapısı
 
 ## Tamamlanan fazlar
 
 - **Faz 0** — Başlangıç ve keşif ✅ (2026-11-13)
 - **Faz 1** — Proje iskeleti ve geliştirme altyapısı ✅ (2026-11-13)
 - **Faz 2** — Veritabanı ve veri katmanı ✅ (2026-11-13)
+- **Faz 3** — Kimlik doğrulama ve yetkilendirme ✅ (2026-11-13)
 
-## Faz 2 özeti
+## Faz 3 özeti
 
 | Görev | Durum |
 |-------|-------|
-| Prisma 5.22.0 kurulumu | ✅ |
-| Zod 4.6.7 kurulumu | ✅ |
-| tsx (seed runner) kurulumu | ✅ |
-| Prisma schema (24 model) | ✅ Validate edildi |
-| Enum tasarımları (7 enum) | ✅ |
-| İlişkiler + FK + indeksler | ✅ |
-| src/lib/db.ts (singleton) | ✅ |
-| prisma/seed.ts (idempotent) | ✅ |
-| embedded-postgres kurulumu | ✅ 17.11.0-beta.19 |
-| PostgreSQL başlatma | ✅ Port 5433, locale C |
-| İlk migration (initial_schema) | ✅ 2026-11-13T17:07 |
-| Seed çalıştırma | ✅ 4 rol, 15 izin, 12 kategori, 2 menü, tema, 11 ayar |
-| Seed idempotency testi | ✅ Çoğalma yok |
+| next-auth@5.0.0-beta.32 kurulumu | ✅ |
+| @auth/prisma-adapter@2.11.3 kurulumu | ✅ |
+| src/lib/auth/config.ts (PrismaAdapter + Credentials) | ✅ |
+| src/lib/auth/edge-config.ts (Edge Runtime uyumlu) | ✅ |
+| src/lib/auth/index.ts (handler export) | ✅ |
+| src/lib/auth/password.ts (scrypt hash/verify) | ✅ |
+| src/lib/auth/rbac.ts (requireAuth, requireRole, hasRole) | ✅ |
+| src/lib/auth/types.ts (session type augmentation) | ✅ |
+| src/middleware.ts (Edge route koruma) | ✅ |
+| /api/auth/[...nextauth] route | ✅ |
+| /admin/login sayfası (useActionState) | ✅ |
+| loginAction (rate limiting + audit log) | ✅ |
+| scripts/create-admin.mjs (güvenli CLI) | ✅ |
+| Yetkisiz erişim testi | ✅ |
+| Audit log entegrasyonu | ✅ |
 
-## Test sonuçları (Faz 2 sonrası)
+## Test sonuçları (Faz 3)
 
 | Test | Sonuç | Tarih |
 |------|-------|-------|
-| Prisma schema validate | ✅ Geçerli | 2026-11-13 |
+| GET /admin (yetkisiz) | ✅ 307 → /admin/login | 2026-11-13 |
+| GET /admin/login | ✅ 200 | 2026-11-13 |
+| GET / (public) | ✅ 200 | 2026-11-13 |
+| GET /api/auth/session | ✅ 200 | 2026-11-13 |
 | ESLint | ✅ 0 hata, 0 uyarı | 2026-11-13 |
-| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-13 |
-| Production Build | ✅ 3 static route | 2026-11-13 |
-| Migration (prisma migrate dev) | ✅ Başarılı | 2026-11-13 |
-| Seed testi | ✅ İdempotent doğrulandı | 2026-11-13 |
+| TypeScript | ✅ Temiz | 2026-11-13 |
+| Production Build | ✅ 5 route + proxy | 2026-11-13 |
 
 ## Ortam bilgileri
 
@@ -56,81 +60,53 @@
 | Tailwind CSS | 4.3.3 | ✅ |
 | Prisma | 5.22.0 | ✅ |
 | Zod | 4.6.7 | ✅ |
-| tsx | 4.23.15 | ✅ |
+| next-auth | 5.0.0-beta.32 | ✅ |
+| @auth/prisma-adapter | 2.11.3 | ✅ |
 | embedded-postgres | 17.11.0-beta.19 | ✅ Dev DB |
-| PostgreSQL (sistem) | — | ⚠️ Faz 14'te kurulacak |
-
-## Proje dosya yapısı (Faz 2 sonu)
-
-```
-c:\PROJELER\YAPI2\
-├── prisma/
-│   ├── schema.prisma          # 24 model, 7 enum, tam ilişkiler
-│   ├── seed.ts                # İdempotent seed — 12 kategori, roller, tema, site
-│   └── migrations/
-│       └── 20261113170743_initial_schema/
-│           └── migration.sql  # Tüm tablolar
-├── src/
-│   ├── app/ ...               # Route iskeleti (Faz 1)
-│   ├── components/shared/
-│   │   └── current-year.tsx
-│   └── lib/
-│       ├── config.ts          # Env doğrulama
-│       └── db.ts              # Prisma singleton client
-├── scripts/
-│   ├── setup-db.mjs           # DB başlat + migrate + seed
-│   └── start-db.mjs           # Dev için DB başlat
-├── docs/
-│   └── DECISIONS.md           # D-001..D-010
-├── .env.example
-├── .env.local                 # DATABASE_URL (gitignore'da)
-├── .pg-data/                  # Embedded PG veri dizini (gitignore'da)
-├── package.json               # db:* scriptleri
-└── pnpm-workspace.yaml        # Build script onayları
-```
-
-## Açık riskler / kararlar
-
-### 🟡 Orta — Faz 3'te
-- **Auth çözümü:** Auth.js (NextAuth v5) + PrismaAdapter (D-010 kararı)
-- **Admin şifre oluşturma CLI komutu:** Faz 3'te yazılacak
-
-### 🟢 Düşük — İleride
-- **Sistem PostgreSQL kurulumu:** Faz 14 (yayına hazırlık) — üretimde embedded-postgres kullanılmaz
-- KVKK metinleri, gerçek içerik, domain/marka, hosting
 
 ## Git geçmişi
 
 | Commit | Açıklama | Tarih |
 |--------|----------|-------|
+| addf7c0 | feat: Faz 3 - Auth.js (NextAuth v5) + RBAC | 2026-11-13 |
+| d4523a7 | docs: update checklist and progress - Faz 2 complete | 2026-11-13 |
 | ee9e527 | feat: Faz 2 complete - migration and seed verified | 2026-11-13 |
 | 73a413e | feat: Faz 2 - Prisma 5.22.0 schema ve seed | 2026-11-13 |
 | 8b5d699 | feat: Faz 0+1 iskelet kurulumu | 2026-11-13 |
 
-## Faz 3 planı (Auth/RBAC)
+## Önemli teknik notlar
 
-### Görevler (sırayla)
-1. `pnpm add next-auth@beta @auth/prisma-adapter`
-2. `src/lib/auth/config.ts` — Auth.js yapılandırması
-3. `src/lib/auth/index.ts` — helper export'ları
-4. `src/app/admin/login/page.tsx` — login sayfası
-5. `src/app/admin/login/actions.ts` — server action
-6. `src/middleware.ts` — admin route koruması
-7. `src/lib/auth/rbac.ts` — server-side RBAC helper
-8. `src/lib/auth/session.ts` — session utilities
-9. `src/app/api/auth/[...nextauth]/route.ts` — Auth.js handler
-10. Rate limiting (login endpoint)
-11. `scripts/create-admin.mjs` — güvenli admin oluşturma CLI
-12. Yetkisiz erişim testleri
-13. Audit log altyapısı (Faz 2 modelini kullan)
-14. lint + typecheck + build
-15. commit
+### middleware.ts → proxy.ts (Next.js 16)
+Next.js 16 `middleware.ts`'i deprecated sayıp `proxy.ts` öneriyor ama hâlâ `middleware.ts`'i arıyor. İsim değişikliği yapmak build'i kırıyor. Şimdilik `middleware.ts` olarak bırakıldı.
 
-### Faz 3 kabul kriteri
-Yetkisiz kullanıcı admin verisine ve mutation işlemlerine erişemiyor.
+### Edge Runtime ayrımı
+Auth.js config'i iki katmana bölündü:
+- `edge-config.ts` → sadece session doğrulama (middleware)
+- `config.ts` → tam config (Prisma, scrypt) → sadece Node.js runtime'da kullanılır
+
+### Rate limiting
+Şu an in-memory Map kullanıyor. Üretimde Redis tabanlı (Upstash vb.) ile değiştirilmeli.
+
+### create-admin CLI
+Admin parolası seed'e gömülmedi. Güvenli oluşturma: `node scripts/start-db.mjs` ardından `pnpm create-admin`.
+
+## Faz 4 planı (Medya ve CMS Altyapısı)
+
+### Görevler
+1. Medya depolama adaptörü (LOCAL / S3 soyutlaması)
+2. Upload endpoint — MIME allowlist (image/jpeg, image/png, image/webp, image/svg+xml, application/pdf)
+3. Boyut limiti (varsayılan 10MB)
+4. Görsel metadata ve alt text alanları
+5. Medya kütüphanesi CRUD API (server actions)
+6. Güvenli medya silme (kullanım kontrolü)
+7. İçerik durumları ve yayınlama mantığı (ContentStatus enum)
+8. Slug üretimi ve çakışma kontrolü
+9. Ortak arama, filtreleme, sıralama, sayfalama helper'ları
+10. lint + typecheck + build
+11. commit
 
 ## Sonraki oturum kuralı
 
-Önce bu dosyayı, `PROJECT_CHECKLIST.md`, `PROJECT_SPECIFICATION.md` ve `docs/DECISIONS.md` dosyalarını oku. Checklist'te tamamlandı görünmeyen hiçbir işi yapılmış varsayma.
+Önce bu dosyayı, `PROJECT_CHECKLIST.md`, `PROJECT_SPECIFICATION.md` ve `docs/DECISIONS.md` dosyalarını oku.
 
-Faz 3 başlamadan önce `node scripts/start-db.mjs` ile embedded PostgreSQL başlatılmalı (`.env.local` DATABASE_URL'i port 5433 üzerinden).
+Dev için: `node scripts/start-db.mjs` ile embedded PostgreSQL başlat (port 5433), ardından `pnpm dev`.
