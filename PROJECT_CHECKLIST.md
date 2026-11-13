@@ -61,8 +61,8 @@ mevcut.
 
 ## Faz 2 --- Veritabanı ve veri katmanı
 
--   [!] PostgreSQL bağlantısı.
-    > PostgreSQL bu makinede kurulu değil. .env.example hazır. Bağlantı Faz 2 migration testinde doğrulanacak. Kullanıcı kurulum yöntemini seçmeli.
+-   [x] PostgreSQL bağlantısı.
+    > embedded-postgres 17.11.0-beta.19 (npm) ile çözüldü. EDB bu ağdan engellendiği için sistem PostgreSQL'i npm paketi üzerinden çalıştırıyor. Port 5433, persistent .pg-data/ dizini. Üretim kurulumu Faz 14'te.
 -   [x] Prisma kurulumu ve uyumlu sürüm sabitleme.
     > Prisma 5.22.0 (kararlı) + @prisma/client 5.22.0 kuruldu. RC sürüm reddedildi.
 -   [x] Ana veri modelleri.
@@ -73,23 +73,22 @@ mevcut.
     > slug, status, sortOrder, createdAt, entityType alanlarına indeks eklendi.
 -   [x] Enum/status tasarımları.
     > ContentStatus, UserRole, WorkModel, CustomerType, LeadStatus, HttpStatus, StorageProvider enum'ları.
--   [ ] İlk migration.
-    > PostgreSQL bağlantısı gerekli — bekliyor.
+-   [x] İlk migration.
+    > 20261113170743_initial_schema migration'ı başarıyla çalıştırıldı. Tüm 24 model tablo olarak oluşturuldu (2026-11-13).
 -   [x] İdempotent seed.
-    > prisma/seed.ts upsert pattern ile idempotent yazıldı.
+    > prisma/seed.ts upsert pattern ile idempotent yazıldı ve doğrulandı.
 -   [x] 12 hizmet kategorisinin seed edilmesi.
-    > Tüm 12 kategori seed.ts içinde tanımlandı (çalıştırma DB gerektirir).
+    > Tüm 12 kategori seed çalıştırıldı ve doğrulandı (2026-11-13).
 -   [x] Varsayılan tema ve site ayarlarının seed edilmesi.
-    > Mavi palet token'ları ve 11 site ayarı seed.ts içinde tanımlandı.
+    > Mavi palet token'ları ve 11 site ayarı seed edildi ve doğrulandı (2026-11-13).
 -   [x] Güvenli ilk admin oluşturma yöntemi.
     > Seed dosyasında admin parolası yok. CLI ile oluşturma zorunluluğu belgelendi.
--   [ ] Boş DB üzerinde migration + seed testi.
-    > PostgreSQL bağlantısı gerekli — bekliyor.
+-   [x] Boş DB üzerinde migration + seed testi.
+    > Migration + seed çalıştırıldı. Seed idempotency testi geçti (çoğalma yok). lint ✅ typecheck ✅ build ✅ (2026-11-13).
 -   [x] Progress güncellemesi.
     > PROJECT_PROGRESS.md kapsamlı güncellendi. Faz 2 şema kısmı tamamlandı; migration/seed DB bekliyor.
 
-**Faz 2 kabul:** Veritabanı sıfırdan kurulabiliyor; seed tekrarında
-çoğalma yok.
+**Faz 2 kabul:** ✅ Veritabanı sıfırdan kurulabiliyor; seed tekrarında çoğalma yok. (2026-11-13)
 
 ## Faz 3 --- Kimlik doğrulama ve yetkilendirme
 
