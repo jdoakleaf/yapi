@@ -3,125 +3,107 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-13T12:43:00+03:00
-- **Aktif faz:** Faz 1 — Proje iskeleti ve geliştirme altyapısı ✅ TAMAMLANDI
-- **Son tamamlanan görev:** Lint, typecheck ve production build başarılı
-- **Devam eden görev:** Faz 1 kapanış — git commit ve progress güncelleme
-- **Sıradaki tek adım:** Faz 2 — Veritabanı ve veri katmanı (PostgreSQL kurulumu gerekli)
+- **Son güncelleme:** 2026-11-13T12:58:00+03:00
+- **Aktif faz:** Faz 2 — Veritabanı ve veri katmanı (kısmen tamamlandı)
+- **Son tamamlanan görev:** Prisma schema + seed yazıldı, lint/typecheck/build geçti
+- **Devam eden görev:** Migration ve seed testi — PostgreSQL bağlantısı bekleniyor
+- **Sıradaki tek adım:** PostgreSQL kurulumu sonrası `pnpm db:migrate` ve `pnpm db:seed` çalıştırılacak
 
 ## Tamamlanan fazlar
 
-- **Faz 0** — Başlangıç ve keşif (2026-11-13)
-- **Faz 1** — Proje iskeleti ve geliştirme altyapısı (2026-11-13)
-  - Next.js 16.4.6 + React 19.3.0 + TypeScript 5.9.3 strict
-  - Tailwind CSS 4.3.3 + Turbopack
-  - ESLint 9.39.5 + eslint-config-next
-  - pnpm 12.18.0 paket yöneticisi
-  - Public (public)/ ve admin/ route grupları
-  - Global error, not-found ve loading durumları
-  - CSS custom properties ile tema token sistemi
-  - Config doğrulama modülü
-  - .env.example dosyası
-  - Git repo ve ilk commit
+- **Faz 0** — Başlangıç ve keşif ✅ (2026-11-13)
+- **Faz 1** — Proje iskeleti ve geliştirme altyapısı ✅ (2026-11-13)
+- **Faz 2** — Veritabanı şema ve seed hazırlandı ⚠️ (migration/test PostgreSQL bekliyor)
 
-## Kurulan bağımlılıklar (Faz 1)
+## Faz 2 özeti
 
-| Paket | Sürüm | Tür |
-|-------|-------|-----|
-| next | 16.4.6 | dependency |
-| react | 19.3.0 | dependency |
-| react-dom | 19.3.0 | dependency |
-| typescript | 5.9.3 | devDependency |
-| tailwindcss | 4.3.3 | devDependency |
-| @tailwindcss/turbopack | 4.3.3 | devDependency |
-| eslint | 9.39.5 | devDependency |
-| eslint-config-next | 16.4.6 | devDependency |
-| @types/node | 20.x | devDependency |
-| @types/react | 19.x | devDependency |
-| @types/react-dom | 19.x | devDependency |
+| Görev | Durum |
+|-------|-------|
+| Prisma 5.22.0 kurulumu | ✅ |
+| Zod 4.6.7 kurulumu | ✅ |
+| tsx (seed runner) kurulumu | ✅ |
+| Prisma schema (24 model) | ✅ Validate edildi |
+| Enum tasarımları (7 enum) | ✅ |
+| İlişkiler + FK + indeksler | ✅ |
+| src/lib/db.ts (singleton) | ✅ |
+| prisma/seed.ts (idempotent) | ✅ |
+| 12 kategori seed verisi | ✅ (çalıştırma DB bekliyor) |
+| Tema + site ayarları seed | ✅ (çalıştırma DB bekliyor) |
+| İlk migration | ⚠️ PostgreSQL gerekli |
+| Migration + seed testi | ⚠️ PostgreSQL gerekli |
 
-## Test sonuçları (Faz 1)
+## Test sonuçları (Faz 2 sonrası)
 
 | Test | Sonuç | Tarih |
 |------|-------|-------|
-| ESLint | ✅ 0 error, 0 warning | 2026-11-13 |
+| Prisma schema validate | ✅ Geçerli | 2026-11-13 |
+| ESLint | ✅ 0 hata | 2026-11-13 |
 | TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-13 |
-| Production Build | ✅ Başarılı (3 static route) | 2026-11-13 |
+| Production Build | ✅ Başarılı | 2026-11-13 |
+| Migration (prisma migrate dev) | ⏳ DB bekleniyor | — |
+| Seed testi | ⏳ DB bekleniyor | — |
 
 ## Ortam bilgileri
 
-| Bileşen | Durum |
-|---------|-------|
-| Node.js | v24.15.0 ✅ |
-| pnpm | v12.18.0 ✅ |
-| PostgreSQL | Kurulu değil ⚠️ |
-| Git repo | ✅ Oluşturuldu |
+| Bileşen | Sürüm | Durum |
+|---------|-------|-------|
+| Node.js | v24.15.0 | ✅ |
+| pnpm | v12.18.0 | ✅ |
+| Next.js | 16.4.6 | ✅ |
+| React | 19.3.0 | ✅ |
+| TypeScript | 5.9.3 | ✅ |
+| Tailwind CSS | 4.3.3 | ✅ |
+| Prisma | 5.22.0 | ✅ |
+| Zod | 4.6.7 | ✅ |
+| tsx | 4.23.15 | ✅ |
+| PostgreSQL | — | ⚠️ Kurulumu gerekli |
 
-## Proje dosya yapısı (Faz 1 sonu)
+## Proje dosya yapısı (Faz 2 sonu)
 
 ```
 c:\PROJELER\YAPI2\
+├── prisma/
+│   ├── schema.prisma          # 24 model, 7 enum, tam ilişkiler
+│   └── seed.ts                # İdempotent seed — 12 kategori, roller, tema, site
 ├── src/
-│   ├── app/
-│   │   ├── layout.tsx              # Root layout (lang="tr")
-│   │   ├── globals.css             # Tailwind + CSS custom properties
-│   │   ├── global-error.tsx        # Global error boundary
-│   │   ├── not-found.tsx           # 404 sayfası
-│   │   ├── (public)/
-│   │   │   ├── layout.tsx          # Public header + footer
-│   │   │   ├── page.tsx            # Ana sayfa
-│   │   │   └── loading.tsx         # Public loading state
-│   │   └── admin/
-│   │       ├── layout.tsx          # Admin sidebar + header (noindex)
-│   │       ├── page.tsx            # Dashboard placeholder
-│   │       └── loading.tsx         # Admin loading state
-│   ├── components/
-│   │   └── shared/
-│   │       └── current-year.tsx    # Client-side yıl gösterimi
+│   ├── app/ ...               # Route iskeleti (Faz 1)
+│   ├── components/shared/
+│   │   └── current-year.tsx   # useSyncExternalStore ile prerender güvenli
 │   └── lib/
-│       └── config.ts              # Ortam değişkeni doğrulama
-├── public/                         # Statik dosyalar
+│       ├── config.ts          # Env doğrulama
+│       └── db.ts              # Prisma singleton client
 ├── docs/
-│   ├── PROJECT_SPECIFICATION.md
-│   ├── PROJECT_CHECKLIST.md
-│   ├── PROJECT_PROGRESS.md
-│   ├── ANTIGRAVITY_MASTER_PROMPT.md
-│   └── DECISIONS.md
+│   └── DECISIONS.md           # D-001..D-008
 ├── .env.example
-├── .gitignore
-├── eslint.config.mjs
-├── next.config.ts
-├── tsconfig.json
-├── package.json
-├── pnpm-lock.yaml
-└── pnpm-workspace.yaml
+├── package.json               # db:generate, db:migrate, db:seed scriptleri
+└── pnpm-workspace.yaml        # Prisma build script onayları
 ```
 
 ## Açık riskler / kararlar
 
-### ⚠️ Faz 2 öncesi çözülmeli
-- **PostgreSQL kurulumu:** Yerel kurulum, Docker veya uzak sunucu seçilmeli.
+### 🔴 Kritik — Şu an engel
+- **PostgreSQL kurulumu:** Migration ve seed testi yapılamıyor. Seçenekler:
+  - a) Yerel Windows kurulumu
+  - b) `docker run -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:16`
+  - c) Uzak sunucu `.env.local`'e DATABASE_URL eklenerek
 
-### ⚠️ İlgili fazda çözülecek
-- **Auth çözümü:** Faz 3'te seçilecek (next-auth / Lucia / özel)
-- **shadcn/ui kurulumu:** Faz 5'te component ihtiyacı başladığında eklenecek
-- **Hosting:** Faz 14'te kesinleştirilecek
+### 🟡 Orta — Faz 3'te
+- **Auth çözümü seçimi:** next-auth v5 (Auth.js) önerilir — Faz 3'te karar verilecek
+- **Admin şifre oluşturma CLI komutu:** Faz 3'te yazılacak
 
-### 🟢 Yayın öncesi
-- KVKK metinleri — hukuki inceleme gerekli
-- Gerçek içerik (logo, fotoğraf, yorumlar)
-- Domain / marka adı
+### 🟢 Düşük — İleride
+- KVKK metinleri, gerçek içerik, domain/marka, hosting
 
 ## Son değiştirilen önemli dosyalar
 
 | Dosya | İşlem | Tarih |
 |-------|-------|-------|
-| src/app/** | Route iskeleti oluşturuldu | 2026-11-13 |
-| src/components/shared/current-year.tsx | Oluşturuldu | 2026-11-13 |
-| src/lib/config.ts | Oluşturuldu | 2026-11-13 |
-| .env.example | Oluşturuldu | 2026-11-13 |
-| package.json | Oluşturuldu ve yapılandırıldı | 2026-11-13 |
-| PROJECT_CHECKLIST.md | Faz 1 görevleri tamamlandı | 2026-11-13 |
+| prisma/schema.prisma | Oluşturuldu (24 model) | 2026-11-13 |
+| prisma/seed.ts | Oluşturuldu (idempotent) | 2026-11-13 |
+| src/lib/db.ts | Oluşturuldu | 2026-11-13 |
+| src/components/shared/current-year.tsx | useSyncExternalStore ile düzeltildi | 2026-11-13 |
+| package.json | db:* scriptleri eklendi | 2026-11-13 |
+| pnpm-workspace.yaml | Prisma build onayları | 2026-11-13 |
 
 ## Sonraki oturum kuralı
 

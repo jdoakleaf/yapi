@@ -67,3 +67,19 @@ Bu dosya projede alınan önemli teknik ve ürün kararlarını, gerekçelerini 
 **Karar:** Proje dizininde henüz Git reposu yoktur. Faz 1'de proje iskeleti kurulduktan sonra `git init` yapılacak ve `.gitignore` oluşturulacaktır.
 **Gerekçe:** Sürüm kontrolü en erken aşamada başlatılmalıdır.
 **Alternatifler:** Yok.
+### D-007 — Next.js Sürüm Uyumluluğu: new Date() Prerender Kısıtı
+
+**Tarih:** 2026-11-13
+**Karar:** Next.js 16'da Server Component ve Client Component'lerde bile `new Date()` prerender sırasında "unstable value" hatası veriyor. Çözüm: `useEffect` ile client-side hydration sonrası set eden bir wrapper component (`CurrentYear`).
+**Gerekçe:** Next.js 16 Partial Prerendering ile prerender güvenliği çok sıkılaştırıldı. Statik build'de tarih/saat gibi dinamik değerler için `useEffect` + `useState(null)` pattern'i kullanılmalı; prerender için statik fallback değeri yazılmalı.
+**Etkilenen dosya:** `src/components/shared/current-year.tsx`
+**Alternatifler:** `dynamic = 'force-dynamic'` ile sayfayı SSR'a çevirmek (gereksiz; yalnızca yıl gösterimi için tercih edilmedi).
+
+---
+
+### D-008 — Tailwind CSS v4 ve shadcn/ui Kurulum Zamanlaması
+
+**Tarih:** 2026-11-13
+**Karar:** Tailwind CSS 4.3.3 kuruldu. shadcn/ui kurulumu Faz 5'te admin paneli bileşen ihtiyacı başladığında yapılacak. Faz 1'de erken eklemek gereksiz bağımlılık ekler.
+**Gerekçe:** shadcn/ui CLI kurulumu bazı dosyaları (globals.css, tailwind config) değiştirir. Özelleşmiş tema sistemi kurulmadan önce bu değişikliği yapmak çakışma riski yaratır.
+**Alternatifler:** Erken kurulum (reddedildi — gereksiz kompleksite).

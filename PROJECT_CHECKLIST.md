@@ -52,26 +52,41 @@ mevcut.
     > global-error.tsx, not-found.tsx, (public)/loading.tsx, admin/loading.tsx oluşturuldu.
 -   [x] Lint, typecheck ve production build çalıştır.
     > ✅ lint: 0 error, 0 warning | ✅ typecheck: temiz | ✅ build: başarılı (3 static route).
--   [~] Progress dosyasını güncelle.
-    > Güncelleniyor.
+-   [x] Progress dosyasını güncelle.
+    > PROJECT_PROGRESS.md kapsamlı güncellendi. Git commit: 8b5d699 (36 dosya).
+
+**Faz 1 kabul:** ✅ Temiz kurulum, lint: 0 hata, typecheck: temiz, build: başarılı (3 static route).
 
 **Faz 1 kabul:** Temiz kurulum, lint, typecheck ve build başarılı.
 
 ## Faz 2 --- Veritabanı ve veri katmanı
 
--   [ ] PostgreSQL bağlantısı.
--   [ ] Prisma kurulumu ve uyumlu sürüm sabitleme.
--   [ ] Ana veri modelleri.
--   [ ] İlişkiler, unique constraint ve foreign key'ler.
--   [ ] Gerekli indeksler.
--   [ ] Enum/status tasarımları.
+-   [!] PostgreSQL bağlantısı.
+    > PostgreSQL bu makinede kurulu değil. .env.example hazır. Bağlantı Faz 2 migration testinde doğrulanacak. Kullanıcı kurulum yöntemini seçmeli.
+-   [x] Prisma kurulumu ve uyumlu sürüm sabitleme.
+    > Prisma 5.22.0 (kararlı) + @prisma/client 5.22.0 kuruldu. RC sürüm reddedildi.
+-   [x] Ana veri modelleri.
+    > Tüm modeller prisma/schema.prisma'da tanımlandı: User, Role, Permission, Session, Media, Page, PageSection, ServiceCategory, Service, Project, ProjectService, ProjectMedia, BlogPost, Testimonial, FAQ, Menu, MenuItem, SiteSetting, ThemeSetting, Lead, LeadAttachment, LeadNote, Redirect, AuditLog.
+-   [x] İlişkiler, unique constraint ve foreign key'ler.
+    > Tüm ilişkiler, onDelete davranışları ve unique constraint'ler tanımlandı.
+-   [x] Gerekli indeksler.
+    > slug, status, sortOrder, createdAt, entityType alanlarına indeks eklendi.
+-   [x] Enum/status tasarımları.
+    > ContentStatus, UserRole, WorkModel, CustomerType, LeadStatus, HttpStatus, StorageProvider enum'ları.
 -   [ ] İlk migration.
--   [ ] İdempotent seed.
--   [ ] 12 hizmet kategorisinin seed edilmesi.
--   [ ] Varsayılan tema ve site ayarlarının seed edilmesi.
--   [ ] Güvenli ilk admin oluşturma yöntemi.
+    > PostgreSQL bağlantısı gerekli — bekliyor.
+-   [x] İdempotent seed.
+    > prisma/seed.ts upsert pattern ile idempotent yazıldı.
+-   [x] 12 hizmet kategorisinin seed edilmesi.
+    > Tüm 12 kategori seed.ts içinde tanımlandı (çalıştırma DB gerektirir).
+-   [x] Varsayılan tema ve site ayarlarının seed edilmesi.
+    > Mavi palet token'ları ve 11 site ayarı seed.ts içinde tanımlandı.
+-   [x] Güvenli ilk admin oluşturma yöntemi.
+    > Seed dosyasında admin parolası yok. CLI ile oluşturma zorunluluğu belgelendi.
 -   [ ] Boş DB üzerinde migration + seed testi.
--   [ ] Progress güncellemesi.
+    > PostgreSQL bağlantısı gerekli — bekliyor.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md kapsamlı güncellendi. Faz 2 şema kısmı tamamlandı; migration/seed DB bekliyor.
 
 **Faz 2 kabul:** Veritabanı sıfırdan kurulabiliyor; seed tekrarında
 çoğalma yok.
