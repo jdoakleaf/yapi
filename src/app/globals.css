@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/*
+ * Yapı Platform — Global Styles
+ * Tema renkleri CSS custom properties olarak tanımlanmıştır.
+ * Faz 5'te admin panelinden dinamik olarak yönetilecektir.
+ */
+
+:root {
+  /* Brand Colors — varsayılan mavi palet */
+  --brand-navy: #101F33;
+  --brand-primary: #1769AA;
+  --brand-accent: #2589D8;
+  --brand-soft: #DCEEFF;
+  --surface: #FFFFFF;
+  --surface-muted: #F4F8FC;
+  --text-primary: #182433;
+  --text-muted: #657386;
+  --border: #E2E8F0;
+}
