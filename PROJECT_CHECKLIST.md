@@ -116,15 +116,24 @@ mevcut.
 
 ## Faz 4 --- Medya ve ortak CMS altyapısı
 
--   [ ] Medya depolama adaptörü.
--   [ ] Upload allowlist, MIME ve boyut kontrolleri.
--   [ ] Görsel metadata ve alt text.
--   [ ] Medya kütüphanesi CRUD.
--   [ ] Güvenli medya silme ve kullanım kontrolü.
--   [ ] İçerik durumları ve yayınlama mantığı.
--   [ ] Slug üretimi ve çakışma kontrolü.
--   [ ] Ortak arama, filtreleme, sıralama ve sayfalama.
--   [ ] Progress güncellemesi.
+-   [x] Medya depolama adaptörü.
+    > LocalStorageAdapter + StorageAdapter arayüzü. src/lib/media/storage.ts. Üretimde S3/R2 adaptörü eklenebilir (D-010).
+-   [x] Upload allowlist, MIME ve boyut kontrolleri.
+    > ALLOWED_MIME_TYPES, MAX_FILE_SIZE (10 MB), validateUpload() fonksiyonu. src/lib/media/storage.ts.
+-   [x] Görsel metadata ve alt text.
+    > Media.altText güncelleme: updateMediaAltText() server action. src/lib/media/actions.ts.
+-   [x] Medya kütüphanesi CRUD.
+    > uploadMedia, listMedia (filtreleme+sayfalama), deleteMedia server actions. src/lib/media/actions.ts.
+-   [x] Güvenli medya silme ve kullanım kontrolü.
+    > deleteMedia: Page+Service+Project+BlogPost referans kontrolü, fiziksel dosya silme. src/lib/media/actions.ts.
+-   [x] İçerik durumları ve yayınlama mantığı.
+    > ContentStatus enum, canTransition(), getAvailableTransitions(), publishedFilter(). src/lib/cms/status.ts.
+-   [x] Slug üretimi ve çakışma kontrolü.
+    > slugify() (Türkçe karakter desteği), generateUniqueSlug() (N deneme, suffix). src/lib/cms/slug.ts.
+-   [x] Ortak arama, filtreleme, sıralama ve sayfalama.
+    > parsePagination(), buildPaginatedResponse(), buildOrderBy(). src/lib/cms/pagination.ts.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. Build ✅ lint ✅ typecheck ✅ (2026-11-14). Commit: fazla sonra.
 
 ## Faz 5 --- Admin paneli kabuğu ve ayarlar
 

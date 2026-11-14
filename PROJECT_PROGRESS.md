@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-13T20:25:00+03:00
-- **Aktif faz:** Faz 4 — Medya ve ortak CMS altyapısı
-- **Son tamamlanan görev:** Faz 3 — Auth/RBAC tamamlandı ve test edildi
-- **Devam eden görev:** Faz 4 başlayacak (kullanıcı onayı bekleniyor)
-- **Sıradaki tek adım:** Medya depolama adaptörü + upload altyapısı
+- **Son güncelleme:** 2026-11-14T22:10:00+03:00
+- **Aktif faz:** Faz 5 — Admin paneli kabuğu ve ayarlar (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 4 — Medya ve ortak CMS altyapısı ✅ (2026-11-14)
+- **Devam eden görev:** Faz 5 başlayacak
+- **Sıradaki tek adım:** shadcn/ui kurulumu + Admin dashboard layout
 
 ## Tamamlanan fazlar
 
@@ -15,28 +15,23 @@
 - **Faz 1** — Proje iskeleti ve geliştirme altyapısı ✅ (2026-11-13)
 - **Faz 2** — Veritabanı ve veri katmanı ✅ (2026-11-13)
 - **Faz 3** — Kimlik doğrulama ve yetkilendirme ✅ (2026-11-13)
+- **Faz 4** — Medya ve ortak CMS altyapısı ✅ (2026-11-14)
 
-## Faz 3 özeti
+## Faz 4 özeti
 
 | Görev | Durum |
 |-------|-------|
-| next-auth@5.0.0-beta.32 kurulumu | ✅ |
-| @auth/prisma-adapter@2.11.3 kurulumu | ✅ |
-| src/lib/auth/config.ts (PrismaAdapter + Credentials) | ✅ |
-| src/lib/auth/edge-config.ts (Edge Runtime uyumlu) | ✅ |
-| src/lib/auth/index.ts (handler export) | ✅ |
-| src/lib/auth/password.ts (scrypt hash/verify) | ✅ |
-| src/lib/auth/rbac.ts (requireAuth, requireRole, hasRole) | ✅ |
-| src/lib/auth/types.ts (session type augmentation) | ✅ |
-| src/middleware.ts (Edge route koruma) | ✅ |
-| /api/auth/[...nextauth] route | ✅ |
-| /admin/login sayfası (useActionState) | ✅ |
-| loginAction (rate limiting + audit log) | ✅ |
-| scripts/create-admin.mjs (güvenli CLI) | ✅ |
-| Yetkisiz erişim testi | ✅ |
-| Audit log entegrasyonu | ✅ |
+| src/lib/media/storage.ts (LocalStorageAdapter) | ✅ |
+| src/lib/media/actions.ts (uploadMedia, listMedia, deleteMedia, updateMediaAltText) | ✅ |
+| src/lib/cms/slug.ts (slugify, generateUniqueSlug) | ✅ |
+| src/lib/cms/pagination.ts (parsePagination, buildPaginatedResponse, buildOrderBy) | ✅ |
+| src/lib/cms/status.ts (ContentStatus, canTransition, STATUS_LABELS) | ✅ |
+| src/app/api/media/upload/route.ts (POST upload + GET list) | ✅ |
+| public/uploads/ dizini | ✅ |
+| turbopackIgnore yorum eklendi (storage.ts path.join) | ✅ |
 
-## Test sonuçları (Faz 3)
+## Test sonuçları (Faz 4)
+
 
 | Test | Sonuç | Tarih |
 |------|-------|-------|
@@ -47,6 +42,14 @@
 | ESLint | ✅ 0 hata, 0 uyarı | 2026-11-13 |
 | TypeScript | ✅ Temiz | 2026-11-13 |
 | Production Build | ✅ 5 route + proxy | 2026-11-13 |
+
+## Test sonuçları (Faz 4)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-14 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-14 |
+| Production Build | ✅ 6 route + proxy, 0 hata | 2026-11-14 |
 
 ## Ortam bilgileri
 
