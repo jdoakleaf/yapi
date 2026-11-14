@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-14T23:40:00+03:00
-- **Aktif faz:** Faz 8 — Proje portföyü (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 7 — Hizmet yönetimi ✅ (2026-11-14)
-- **Devam eden görev:** Faz 8 başlayacak
-- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 8 — Proje CRUD + galeri + public sayfalar
+- **Son güncelleme:** 2026-11-14T23:57:00+03:00
+- **Aktif faz:** Faz 9 — Blog, SSS, yorumlar ve menüler (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 8 — Proje portföyü ✅ (2026-11-14)
+- **Devam eden görev:** Faz 9 başlayacak
+- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 9
 
 ## Tamamlanan fazlar
 
@@ -19,6 +19,31 @@
 - **Faz 5** — Admin paneli kabuğu ve ayarlar ✅ (2026-11-14)
 - **Faz 6** — Sayfa ve blok editörü ✅ (2026-11-14)
 - **Faz 7** — Hizmet yönetimi ✅ (2026-11-14)
+- **Faz 8** — Proje portföyü ✅ (2026-11-14)
+
+## Faz 8 özeti
+
+| Görev | Durum |
+|-------|-------|
+| src/lib/cms/project-actions.ts (proje CRUD + galeri + hizmet ilişkisi) | ✅ |
+| src/app/admin/projeler/page.tsx (liste, featured, sil) | ✅ |
+| src/app/admin/projeler/yeni/page.tsx | ✅ |
+| src/app/admin/projeler/[id]/page.tsx (edit + galeri + linker) | ✅ |
+| src/app/admin/projeler/project-form.tsx | ✅ |
+| src/app/admin/projeler/[id]/gallery-manager.tsx | ✅ |
+| src/app/admin/projeler/[id]/service-linker.tsx | ✅ |
+| src/app/admin/projeler/featured-button.tsx | ✅ |
+| src/app/admin/projeler/delete-button.tsx | ✅ |
+| src/app/(public)/projeler/page.tsx (öne çıkan + grid) | ✅ |
+| src/app/(public)/projeler/[slug]/page.tsx (detay + galeri + hizmetler) | ✅ |
+
+## Test sonuçları (Faz 8)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-14 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-14 |
+| Production Build | ✅ 25 route, 0 hata | 2026-11-14 |
 
 ## Faz 7 özeti
 

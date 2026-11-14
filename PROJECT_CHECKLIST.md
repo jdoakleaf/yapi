@@ -232,15 +232,27 @@ mevcut.
 
 ## Faz 8 --- Proje portföyü
 
--   [ ] Proje CRUD.
--   [ ] Proje kapak ve galeri yönetimi.
--   [ ] Projeleri hizmetlerle ilişkilendirme.
--   [ ] Proje lokasyon ve tarih alanları.
--   [ ] Öne çıkan proje seçimi.
--   [ ] Public proje listesi.
--   [ ] Public proje detay sayfası.
--   [ ] SEO ve görsel alt metinleri.
--   [ ] Progress güncellemesi.
+-   [x] Proje CRUD.
+    > src/lib/cms/project-actions.ts: getProjects, getProject, getProjectBySlug, createProject, updateProject, deleteProject, toggleProjectFeatured, updateProjectStatus.
+    > Admin UI: /admin/projeler (liste, featured toggle, sil), /yeni, /[id] (edit + galeri + hizmet ilişkisi).
+-   [x] Proje kapak ve galeri yönetimi.
+    > GalleryManager component: galeri görüntüleme + silme. ProjectMedia (addProjectMedia, removeProjectMedia, reorderProjectMedia). Galeri ekleme UI Faz 11'de medya seçici ile tamamlanacak.
+-   [x] Projeleri hizmetlerle ilişkilendirme.
+    > ServiceLinker component: checkbox liste, setProjectServices server action (ProjectService many-to-many).
+-   [x] Proje lokasyon ve tarih alanları.
+    > locationLabel, projectType, completionDate — ProjectForm'da düzenlenebilir.
+-   [x] Öne çıkan proje seçimi.
+    > isFeatured toggle, ProjectFeaturedButton client component. Öne çıkanlar public listede üstte ve büyük kart olarak gösterilir.
+-   [x] Public proje listesi.
+    > src/app/(public)/projeler/page.tsx — öne çıkanlar büyük kart (2 kolon), diğerleri 3 kolon grid.
+-   [x] Public proje detay sayfası.
+    > src/app/(public)/projeler/[slug]/page.tsx — kapak, açıklama, galeri grid, ilgili hizmetler, benzer projeler, CTA. generateMetadata ile SEO.
+-   [x] SEO ve görsel alt metinleri.
+    > seoTitle, seoDesc — ProjectForm'da düzenlenebilir. Media.altText tüm img tag'lerinde kullanılır.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. lint ✅ typecheck ✅ build ✅ 25 route (2026-11-14).
+
+**Faz 8 kabul:** ✅ Proje CRUD admin'den yönetiliyor; kapak/galeri/hizmet ilişkisi; public liste ve detay sayfaları çalışıyor. Build 25 route, 0 hata. (2026-11-14)
 
 ## Faz 9 --- Blog, SSS, yorumlar ve menüler
 
