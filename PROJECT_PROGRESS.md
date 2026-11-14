@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-14T23:05:00+03:00
-- **Aktif faz:** Faz 6 — Sayfa ve blok editörü (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 5 — Admin paneli kabuğu ve ayarlar ✅ (2026-11-14)
-- **Devam eden görev:** Faz 6 başlayacak
-- **Sıradaki tek adım:** Sayfa CRUD + ana sayfa blok sistemi
+- **Son güncelleme:** 2026-11-14T23:15:00+03:00
+- **Aktif faz:** Faz 7 — Hizmet yönetimi (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 6 — Sayfa ve blok editörü ✅ (2026-11-14)
+- **Devam eden görev:** Faz 7 başlayacak
+- **Sıradaki tek adım:** Hizmet kategorisi CRUD + hizmet CRUD + public sayfalar
 
 ## Tamamlanan fazlar
 
@@ -17,6 +17,28 @@
 - **Faz 3** — Kimlik doğrulama ve yetkilendirme ✅ (2026-11-13)
 - **Faz 4** — Medya ve ortak CMS altyapısı ✅ (2026-11-14)
 - **Faz 5** — Admin paneli kabuğu ve ayarlar ✅ (2026-11-14)
+- **Faz 6** — Sayfa ve blok editörü ✅ (2026-11-14)
+
+## Faz 6 özeti
+
+| Görev | Durum |
+|-------|-------|
+| src/lib/cms/blocks.ts (12 blok tipi, Zod şemaları) | ✅ |
+| src/lib/cms/page-actions.ts (createPage, updatePage, deletePage, addPageSection, updatePageSection, deletePageSection, reorderPageSections, toggleSectionActive) | ✅ |
+| src/app/admin/sayfalar/page.tsx (liste) | ✅ |
+| src/app/admin/sayfalar/delete-button.tsx | ✅ |
+| src/app/admin/sayfalar/yeni/page.tsx | ✅ |
+| src/app/admin/sayfalar/[id]/page.tsx (edit) | ✅ |
+| src/app/admin/sayfalar/[id]/meta-form.tsx | ✅ |
+| src/app/admin/sayfalar/[id]/block-list.tsx | ✅ |
+
+## Test sonuçları (Faz 6)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-14 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-14 |
+| Production Build | ✅ 12 route + proxy, 0 hata | 2026-11-14 |
 
 ## Faz 5 özeti
 

@@ -4,7 +4,6 @@ import { useState, useTransition } from "react";
 import {
   saveThemeTokens,
   resetThemeToDefault,
-  type SaveThemeResult,
 } from "@/lib/settings/theme-actions";
 import {
   generateCssVariables,

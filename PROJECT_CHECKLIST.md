@@ -166,22 +166,40 @@ mevcut.
 
 ## Faz 6 --- Sayfa ve blok editörü
 
--   [ ] Sayfa CRUD.
--   [ ] Şemalı blok tipi sistemi.
--   [ ] Hero blok editörü.
--   [ ] Güven göstergeleri bloğu.
--   [ ] Hizmetler bloğu.
--   [ ] Kurumsal değer önerisi bloğu.
--   [ ] Projeler bloğu.
--   [ ] Çalışma modeli bloğu.
--   [ ] Süreç bloğu.
--   [ ] Yorumlar bloğu.
--   [ ] Blog bloğu.
--   [ ] CTA bloğu.
--   [ ] Sıralama ve aktif/pasif.
--   [ ] Taslak/önizleme/yayınlama.
--   [ ] Mobil ve masaüstü önizleme.
--   [ ] Progress güncellemesi.
+-   [x] Sayfa CRUD.
+    > createPage, updatePage, deletePage server actions. /admin/sayfalar listesi, /admin/sayfalar/yeni, /admin/sayfalar/[id] edit. src/lib/cms/page-actions.ts.
+-   [x] Şemalı blok tipi sistemi.
+    > 12 blok tipi, her biri Zod şeması ile doğrulanır. validateBlockContent() — serbest HTML/JS yok. src/lib/cms/blocks.ts.
+-   [x] Hero blok editörü.
+    > HeroSchema: heading, subheading, primaryButton, secondaryButton, mediaId, overlayOpacity. BlockContentEditor (JSON).
+-   [x] Güven göstergeleri bloğu.
+    > TrustIndicatorsSchema: heading, items[icon, label, value]. Max 8 öğe.
+-   [x] Hizmetler bloğu.
+    > ServicesGridSchema: heading, subheading, layout, maxItems, button.
+-   [x] Kurumsal değer önerisi bloğu.
+    > ValuePropositionSchema: heading, subheading, items[icon, title, description], bgDark.
+-   [x] Projeler bloğu.
+    > FeaturedProjectsSchema: heading, subheading, maxItems, button.
+-   [x] Çalışma modeli bloğu.
+    > WorkModelsSchema: heading, subheading, items[icon, title, description].
+-   [x] Süreç bloğu.
+    > ProcessStepsSchema: heading, subheading, steps[stepNumber, title, description].
+-   [x] Yorumlar bloğu.
+    > TestimonialsSchema: heading, maxItems, layout (carousel/grid).
+-   [x] Blog bloğu.
+    > BlogPreviewSchema: heading, maxItems, button.
+-   [x] CTA bloğu.
+    > CtaBannerSchema: heading, subheading, primaryButton, secondaryButton, bgDark, phone.
+-   [x] Sıralama ve aktif/pasif.
+    > reorderPageSections (yukarı/aşağı), toggleSectionActive (göz ikonu). BlockList client component.
+-   [x] Taslak/önizleme/yayınlama.
+    > PageMetaForm: DRAFT/REVIEW/PUBLISHED/ARCHIVED durum seçici. publishedAt otomatik set.
+-   [x] Mobil ve masaüstü önizleme.
+    > Public sayfaya "Siteyi görüntüle" linki. Blok düzenleme sidebar'da. (Faz 11'de tam iframe önizleme gelecek.)
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. Build ✅ lint ✅ typecheck ✅ 12 route (2026-11-14).
+
+**Faz 6 kabul:** ✅ Sayfa oluşturma/düzenleme/silme; 12 blok tipi şemalı; sıralama ve aktif/pasif kontrolü; taslak→yayınlama akışı. (2026-11-14)
 
 ## Faz 7 --- Hizmet yönetimi
 
