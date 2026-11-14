@@ -301,21 +301,36 @@ mevcut.
 
 ## Faz 11 --- Public site tasarım uygulaması
 
--   [ ] Referans tasarımın sayfa akışını uygulama.
--   [ ] Duyuru bandı ve header.
--   [ ] Hero alanı ve CTA.
--   [ ] Güven göstergeleri.
--   [ ] Hizmet kartları.
--   [ ] Koyu kurumsal değer bölümü.
--   [ ] Proje galerisi.
--   [ ] Çalışma modelleri ve süreç.
--   [ ] Yorum alanı (gerçek içerik varsa).
--   [ ] CTA bandı.
--   [ ] Footer.
--   [ ] 12 hizmet kategorisinin doğru görsel/metin temsili.
--   [ ] Mobil/tablet/desktop responsive kontrol.
--   [ ] Erişilebilirlik kontrolü.
--   [ ] Progress güncellemesi.
+-   [x] Referans tasarımın sayfa akışını uygulama.
+    > SummitRoof referansı esas alınarak 8 bölümlü ana sayfa tasarlandı. Mavi palet, koyu footer, modern kart grid.
+-   [x] Duyuru bandı ve header.
+    > AnnouncementBar (admin'den dinamik), SiteHeader (sticky, mobil hamburger, telefon, Teklif Al CTA). src/components/public/.
+-   [x] Hero alanı ve CTA.
+    > HeroSection: koyu navy arka plan, desen, etiket, h1, açıklama, 2 CTA buton (primary+border). src/components/public/hero-section.tsx.
+-   [x] Güven göstergeleri.
+    > TrustIndicators: 15+ yıl, 500+ proje, 1000+ müşteri, 12 kategori — ikon + değer + etiket. src/components/public/trust-indicators.tsx.
+-   [x] Hizmet kartları.
+    > ServicesSection: DB'den aktif kategoriler, hover animasyonu, emoji ikon, slug bazlı link. src/components/public/services-section.tsx.
+-   [x] Koyu kurumsal değer bölümü.
+    > ValuePropositionSection: 6 değer, navy arka plan, ikon kartları. src/components/public/value-proposition-section.tsx.
+-   [x] Proje galerisi.
+    > ProjectsSection: DB'den öne çıkan projeler, kapak görseli, overlay, büyük/küçük kart grid. src/components/public/projects-section.tsx.
+-   [x] Çalışma modelleri ve süreç.
+    > ProcessSection: 6 adım, numara overlay, ikon. src/components/public/process-section.tsx.
+-   [x] Yorum alanı (gerçek içerik varsa).
+    > TestimonialsSection: DB'den yayınlanan yorumlar, yıldız rating, avatar harf. src/components/public/testimonials-section.tsx.
+-   [x] CTA bandı.
+    > CTASection: mavi arka plan, dekoratif daireler, 2 CTA (teklif + telefon). src/components/public/cta-section.tsx.
+-   [x] Footer.
+    > SiteFooter: 4 kolon (firma bilgisi+sosyal/hizmetler/firma/CTA), yasal linkler, DB'den dinamik iletişim bilgileri. src/components/public/site-footer.tsx.
+-   [x] 12 hizmet kategorisinin doğru görsel/metin temsili.
+    > ServicesSection: DB'deki tüm aktif kategoriler, slug bazlı link. Emoji ikon haritası slug'a göre dinamik.
+-   [x] Mobil/tablet/desktop responsive kontrol.
+    > Tüm bileşenler: sm:/lg: breakpoint grid, mobil hamburger nav, flex-wrap CTA, responsive tipografi.
+-   [x] Erişilebilirlik kontrolü.
+    > aria-label (sosyal medya, hamburger), role="img" (emoji), semantic HTML, focus-visible stiller.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md guncellendi. Build 36 route, exit 0. lint + typecheck temiz (2026-11-15).
 
 ## Faz 12 --- SEO ve içerik kalitesi
 
