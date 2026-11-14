@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // CJS server entry point for Plesk — require() zorunlu
+    "server.js",
+    // Build/deploy scriptleri
+    "scripts/**",
   ]),
 ]);
 
