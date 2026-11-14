@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-14T22:10:00+03:00
-- **Aktif faz:** Faz 5 — Admin paneli kabuğu ve ayarlar (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 4 — Medya ve ortak CMS altyapısı ✅ (2026-11-14)
-- **Devam eden görev:** Faz 5 başlayacak
-- **Sıradaki tek adım:** shadcn/ui kurulumu + Admin dashboard layout
+- **Son güncelleme:** 2026-11-14T23:05:00+03:00
+- **Aktif faz:** Faz 6 — Sayfa ve blok editörü (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 5 — Admin paneli kabuğu ve ayarlar ✅ (2026-11-14)
+- **Devam eden görev:** Faz 6 başlayacak
+- **Sıradaki tek adım:** Sayfa CRUD + ana sayfa blok sistemi
 
 ## Tamamlanan fazlar
 
@@ -16,6 +16,39 @@
 - **Faz 2** — Veritabanı ve veri katmanı ✅ (2026-11-13)
 - **Faz 3** — Kimlik doğrulama ve yetkilendirme ✅ (2026-11-13)
 - **Faz 4** — Medya ve ortak CMS altyapısı ✅ (2026-11-14)
+- **Faz 5** — Admin paneli kabuğu ve ayarlar ✅ (2026-11-14)
+
+## Faz 5 özeti
+
+| Görev | Durum |
+|-------|-------|
+| shadcn/ui bağımlılıkları (Radix + CVA + clsx + lucide-react) | ✅ |
+| src/lib/utils.ts (cn helper) | ✅ |
+| src/components/ui/button.tsx | ✅ |
+| src/components/ui/input.tsx | ✅ |
+| src/components/ui/label.tsx | ✅ |
+| src/components/ui/card.tsx | ✅ |
+| src/components/ui/separator.tsx | ✅ |
+| src/components/ui/toast.tsx + toaster.tsx | ✅ |
+| src/hooks/use-toast.ts | ✅ |
+| src/components/admin/sidebar.tsx (19 modül, 4 grup, aktif link) | ✅ |
+| src/components/admin/header.tsx (mobil hamburger, logout) | ✅ |
+| src/components/admin/breadcrumb.tsx | ✅ |
+| src/app/admin/layout.tsx (session kontrolü, responsive) | ✅ |
+| src/app/admin/page.tsx (dashboard: sayaçlar, son talepler) | ✅ |
+| src/lib/settings/actions.ts (getSiteSettings, updateSiteSettings) | ✅ |
+| src/lib/settings/theme-utils.ts (generateCssVariables, checkWcagAA) | ✅ |
+| src/lib/settings/theme-actions.ts (getThemeTokens, saveThemeTokens, resetThemeToDefault) | ✅ |
+| src/app/admin/ayarlar/genel/page.tsx + form.tsx | ✅ |
+| src/app/admin/ayarlar/tema/page.tsx + form.tsx | ✅ |
+
+## Test sonuçları (Faz 5)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-14 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-14 |
+| Production Build | ✅ 8 route + proxy, 0 hata | 2026-11-14 |
 
 ## Faz 4 özeti
 

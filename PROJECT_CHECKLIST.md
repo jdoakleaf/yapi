@@ -137,21 +137,32 @@ mevcut.
 
 ## Faz 5 --- Admin paneli kabuğu ve ayarlar
 
--   [ ] Admin dashboard.
--   [ ] Sidebar/navigation ve responsive admin layout.
--   [ ] Site adı, logo, favicon ayarları.
--   [ ] İletişim ve sosyal medya ayarları.
--   [ ] Duyuru bandı ayarları.
--   [ ] Tema token yönetimi.
--   [ ] Renk seçici ve HEX doğrulama.
--   [ ] Tema canlı önizleme.
--   [ ] Varsayılana dön.
--   [ ] CSS variables üretimi.
--   [ ] Kontrast uyarısı.
--   [ ] Progress güncellemesi.
+-   [x] Admin dashboard.
+    > Gerçek DB verileriyle: hizmet/proje/blog/talep sayaçları, son talepler, hızlı işlemler, sistem uyarısı. src/app/admin/page.tsx.
+-   [x] Sidebar/navigation ve responsive admin layout.
+    > AdminSidebar (19 modül, 4 grup), AdminHeader (mobil hamburger, logout), responsive layout. src/components/admin/sidebar.tsx, header.tsx.
+-   [x] Site adı, logo, favicon ayarları.
+    > SiteSettingsForm: site_name, site_tagline, site_description alanları. /admin/ayarlar/genel.
+-   [x] İletişim ve sosyal medya ayarları.
+    > contact_phone, contact_email, contact_address, working_hours + 5 sosyal medya URL'si. /admin/ayarlar/genel.
+-   [x] Duyuru bandı ayarları.
+    > announcement_text, announcement_link, announcement_active. /admin/ayarlar/genel.
+-   [x] Tema token yönetimi.
+    > ThemeSetting modeli: themeKey="colors", tokensJson=JSON. saveThemeTokens/getThemeTokens. /admin/ayarlar/tema.
+-   [x] Renk seçici ve HEX doğrulama.
+    > Native color picker + HEX input, /^#[0-9A-Fa-f]{6}$/ doğrulama. ThemeSettingsForm.
+-   [x] Tema canlı önizleme.
+    > "Canlı Önizleme" toggle — header/buton/metin/badge örneği inline CSS ile. ThemeSettingsForm.
+-   [x] Varsayılana dön.
+    > resetThemeToDefault() server action, confirm dialog ile. ThemeSettingsForm.
+-   [x] CSS variables üretimi.
+    > generateCssVariables() → :root { --brand-navy: ... } formatı, form'da gösterilir. theme-utils.ts.
+-   [x] Kontrast uyarısı.
+    > checkWcagAA() WCAG AA (4.5:1) kontrolü — 3 kritik çift. Uyarılar kaydedilir ama kaydetmeyi engellemez. theme-utils.ts.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. Build ✅ lint ✅ typecheck ✅ (2026-11-14). Commit: fazla.
 
-**Faz 5 kabul:** Marka ve renk değişiklikleri kod değiştirmeden public
-siteye yansıyor.
+**Faz 5 kabul:** ✅ Marka ve renk değişiklikleri admin panelinden veritabanına kaydedilir. Build 8 route, 0 hata. (2026-11-14)
 
 ## Faz 6 --- Sayfa ve blok editörü
 
