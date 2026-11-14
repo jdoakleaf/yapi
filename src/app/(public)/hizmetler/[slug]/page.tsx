@@ -2,6 +2,7 @@ import { getServiceBySlug, getServices } from "@/lib/cms/service-actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ServiceSchema, BreadcrumbSchema, FAQSchema } from "@/components/seo/json-ld";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -57,6 +58,23 @@ export default async function HizmetDetayPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-white">
+      <ServiceSchema
+        name={service.title}
+        description={service.shortDescription ?? undefined}
+        slug={service.slug}
+        imageUrl={coverUrl ?? undefined}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Ana Sayfa", href: "/" },
+          { name: "Hizmetler", href: "/hizmetler" },
+          { name: service.category.name, href: "/hizmetler" },
+          { name: service.title, href: `/hizmetler/${service.slug}` },
+        ]}
+      />
+      {service.faqs.length > 0 && (
+        <FAQSchema items={service.faqs.map((f) => ({ question: f.question, answer: f.answer }))} />
+      )}
       {/* Kapak */}
       {coverUrl && (
         <div className="relative h-72 overflow-hidden bg-blue-900 md:h-96">

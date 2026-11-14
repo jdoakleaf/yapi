@@ -334,18 +334,32 @@ mevcut.
 
 ## Faz 12 --- SEO ve içerik kalitesi
 
--   [ ] Metadata yönetimi.
--   [ ] Canonical.
--   [ ] Open Graph.
--   [ ] Sitemap.
--   [ ] Robots.
--   [ ] JSON-LD yapılandırılmış veri.
--   [ ] Breadcrumb.
--   [ ] Redirect yönetimi.
--   [ ] 404 ve noindex kuralları.
--   [ ] Görsel alt text kontrolü.
--   [ ] Türkçe içerik ve URL kontrolü.
--   [ ] Progress güncellemesi.
+-   [x] Metadata yönetimi.
+    > Root layout: metadataBase, title template, openGraph, robots kuralları. generateMetadata: hizmet/blog/proje detay, ana sayfa. Static metadata: blog/projeler/hizmetler listesi.
+-   [x] Canonical.
+    > Root layout alternates.canonical tanımlı. Detay sayfaları generateMetadata ile sayfaya özel canonical döner.
+-   [x] Open Graph.
+    > Root layout openGraph tanımlı. Detay sayfaları kapak görseli ile zengin OG verir.
+-   [x] Sitemap.
+    > src/app/sitemap.ts — service/project/blog/cms sayfaları DB'den dinamik üretiliyor.
+-   [x] Robots.
+    > src/app/robots.ts — /admin/, /api/, /_next/ disallow.
+-   [x] JSON-LD yapılandırılmış veri.
+    > src/components/seo/json-ld.tsx — OrganizationSchema, BreadcrumbSchema, ArticleSchema, ServiceSchema, FAQSchema. Ana sayfa, hizmet/blog/proje detay entegre.
+-   [x] Breadcrumb.
+    > BreadcrumbSchema ile tüm detay sayfalarına eklendi.
+-   [x] Redirect yönetimi.
+    > src/app/admin/yonlendirmeler/ (page + manager + actions), /api/redirect-check endpoint, middleware entegrasyonu.
+-   [x] 404 ve noindex kuralları.
+    > 404 → notFound(), robots.ts'de /admin/ noindex.
+-   [x] Görsel alt text kontrolü.
+    > Tüm <img> ve medya bileşenlerinde altText ?? fallback pattern kullanıldı.
+-   [x] Türkçe içerik ve URL kontrolü.
+    > Tüm public route'lar Türkçe slug yapısında (/hizmetler, /projeler, /blog, /teklif-al).
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. Build ✅ lint ✅ typecheck ✅ 40 route (2026-11-15).
+
+**Faz 12 kabul:** ✅ ESLint: 0 hata, TypeScript: temiz, Build: 40 route, 0 hata. (2026-11-15)
 
 ## Faz 13 --- Güvenlik ve kalite testleri
 

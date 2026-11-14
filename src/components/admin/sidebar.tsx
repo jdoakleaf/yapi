@@ -55,7 +55,8 @@ const navItems = [
     items: [
       { href: "/admin/ayarlar/genel", label: "Site Ayarları", icon: Settings },
       { href: "/admin/ayarlar/tema", label: "Tema ve Renkler", icon: Palette },
-      { href: "/admin/ayarlar/seo", label: "SEO ve Yönlendirmeler", icon: Search },
+      { href: "/admin/ayarlar/seo", label: "SEO ve Meta", icon: Search },
+      { href: "/admin/yonlendirmeler", label: "Yönlendirmeler", icon: ClipboardList },
       { href: "/admin/kullanicilar", label: "Kullanıcılar", icon: Users },
       { href: "/admin/roller", label: "Roller ve Yetkiler", icon: Shield },
       { href: "/admin/denetim", label: "Denetim Kayıtları", icon: ClipboardList },

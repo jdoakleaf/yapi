@@ -2,6 +2,7 @@ import { getBlogPostBySlug } from "@/lib/cms/content-actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ArticleSchema, BreadcrumbSchema } from "@/components/seo/json-ld";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -29,6 +30,22 @@ export default async function BlogDetayPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-white">
+      <ArticleSchema
+        title={post.title}
+        description={post.excerpt ?? undefined}
+        slug={post.slug}
+        publishedAt={post.publishedAt ?? undefined}
+        updatedAt={post.updatedAt}
+        imageUrl={coverUrl ?? undefined}
+        authorName={post.author?.name ?? undefined}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Ana Sayfa", href: "/" },
+          { name: "Blog", href: "/blog" },
+          { name: post.title, href: `/blog/${post.slug}` },
+        ]}
+      />
       {coverUrl && (
         <div className="relative h-64 overflow-hidden bg-blue-900 md:h-80">
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -2,6 +2,7 @@ import { getProjectBySlug, getProjects } from "@/lib/cms/project-actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { BreadcrumbSchema } from "@/components/seo/json-ld";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -54,6 +55,13 @@ export default async function ProjeDetayPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-white">
+      <BreadcrumbSchema
+        items={[
+          { name: "Ana Sayfa", href: "/" },
+          { name: "Projeler", href: "/projeler" },
+          { name: project.title, href: `/projeler/${project.slug}` },
+        ]}
+      />
       {/* Kapak */}
       {coverUrl ? (
         <div className="relative h-72 overflow-hidden bg-blue-900 md:h-[420px]">
