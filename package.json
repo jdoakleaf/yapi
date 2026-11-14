@@ -20,7 +20,8 @@
     "db:reset": "prisma migrate reset",
     "db:setup": "node scripts/setup-db.mjs",
     "db:start": "node scripts/start-db.mjs",
-    "create-admin": "node scripts/create-admin.mjs"
+    "create-admin": "node scripts/create-admin.mjs",
+    "db:backup": "node scripts/backup-db.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

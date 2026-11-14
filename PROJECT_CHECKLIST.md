@@ -396,20 +396,36 @@ mevcut.
 
 ## Faz 14 --- Yayına hazırlık ve operasyon
 
--   [ ] Production env dokümantasyonu.
--   [ ] Hosting/Node çalışma gereksinimleri.
--   [ ] PostgreSQL production kurulumu.
--   [ ] Kalıcı medya depolama.
--   [ ] HTTPS ve güvenlik başlıkları.
--   [ ] Health check.
--   [ ] Log ve hata yönetimi.
--   [ ] DB backup komutu ve planı.
--   [ ] Restore prosedürü ve denemesi.
--   [ ] Migration deploy prosedürü.
--   [ ] Rollback prosedürü.
--   [ ] Kullanıcı/admin kullanım dokümanı.
--   [ ] Son kabul kontrolü.
--   [ ] Progress güncellemesi.
+-   [x] Production env dokümantasyonu.
+    > .env.example production değişkenleriyle güncellendi (DATABASE_URL, AUTH_SECRET, NEXT_PUBLIC_APP_URL, SMTP, S3, RATE_LIMIT).
+-   [x] Hosting/Node çalışma gereksinimleri.
+    > DEPLOYMENT.md bölüm 1: Node.js v20+, RAM 512MB+, Ubuntu 22.04+, PostgreSQL 15+.
+-   [x] PostgreSQL production kurulumu.
+    > DEPLOYMENT.md bölüm 2-3: PostgreSQL 17 kurulumu, kullanıcı/DB oluşturma, bağlantı testi, pgvector.
+-   [x] Kalıcı medya depolama.
+    > Yerel: public/uploads/ (varsayılan). S3 adaptörü hazır (STORAGE_PROVIDER=s3). DEPLOYMENT.md bölüm 8.
+-   [x] HTTPS ve güvenlik başlıkları.
+    > next.config.ts: HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy. Nginx SSL DEPLOYMENT.md bölüm 7.
+-   [x] Health check.
+    > src/app/api/health/route.ts — DB + env kontrolleri, 200/503 response, /api/health endpoint.
+-   [x] Log ve hata yönetimi.
+    > PM2 logs (pm2 logs yapi2), Nginx access/error log. DEPLOYMENT.md bölüm 6, 12.
+-   [x] DB backup komutu ve planı.
+    > scripts/backup-db.mjs (pg_dump wrapper, timestamp'li SQL). package.json db:backup scripti. Cron plan DEPLOYMENT.md bölüm 9.
+-   [x] Restore prosedürü ve denemesi.
+    > DEPLOYMENT.md bölüm 9: psql restore komutu (dropdb + createdb + psql).
+-   [x] Migration deploy prosedürü.
+    > DEPLOYMENT.md bölüm 10: git pull → pnpm install → backup → prisma migrate deploy → build → pm2 reload.
+-   [x] Rollback prosedürü.
+    > DEPLOYMENT.md bölüm 11: git checkout <commit> → build → pm2 reload. DB rollback: psql restore.
+-   [x] Kullanıcı/admin kullanım dokümanı.
+    > LAUNCH_CHECKLIST.md — son kabul kontrol listesi (teknik, public site, admin panel, operasyonel).
+-   [x] Son kabul kontrolü.
+    > LAUNCH_CHECKLIST.md oluşturuldu. Vitest: 93/93, ESLint: 0 hata, TypeScript: temiz, Build: 41 route.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. Test ✅ lint ✅ typecheck ✅ build ✅ 41 route (2026-11-15).
+
+**Faz 14 kabul:** ✅ Vitest: 93/93, ESLint: 0 hata, TypeScript: temiz, Build: 41 route, 0 hata. (2026-11-15)
 
 ## Her görevden sonra zorunlu kapanış
 
