@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-14T23:15:00+03:00
-- **Aktif faz:** Faz 7 — Hizmet yönetimi (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 6 — Sayfa ve blok editörü ✅ (2026-11-14)
-- **Devam eden görev:** Faz 7 başlayacak
-- **Sıradaki tek adım:** Hizmet kategorisi CRUD + hizmet CRUD + public sayfalar
+- **Son güncelleme:** 2026-11-14T23:40:00+03:00
+- **Aktif faz:** Faz 8 — Proje portföyü (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 7 — Hizmet yönetimi ✅ (2026-11-14)
+- **Devam eden görev:** Faz 8 başlayacak
+- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 8 — Proje CRUD + galeri + public sayfalar
 
 ## Tamamlanan fazlar
 
@@ -18,6 +18,36 @@
 - **Faz 4** — Medya ve ortak CMS altyapısı ✅ (2026-11-14)
 - **Faz 5** — Admin paneli kabuğu ve ayarlar ✅ (2026-11-14)
 - **Faz 6** — Sayfa ve blok editörü ✅ (2026-11-14)
+- **Faz 7** — Hizmet yönetimi ✅ (2026-11-14)
+
+## Faz 7 özeti
+
+| Görev | Durum |
+|-------|-------|
+| src/lib/cms/service-actions.ts (kategori + hizmet CRUD) | ✅ |
+| src/app/admin/hizmetler/kategoriler/page.tsx (liste) | ✅ |
+| src/app/admin/hizmetler/kategoriler/[id]/page.tsx (edit) | ✅ |
+| src/app/admin/hizmetler/kategoriler/yeni/page.tsx | ✅ |
+| src/app/admin/hizmetler/kategoriler/category-form.tsx | ✅ |
+| src/app/admin/hizmetler/kategoriler/delete-button.tsx | ✅ |
+| src/app/admin/hizmetler/kategoriler/toggle-button.tsx | ✅ |
+| src/app/admin/hizmetler/page.tsx (liste, filtre, featured) | ✅ |
+| src/app/admin/hizmetler/yeni/page.tsx | ✅ |
+| src/app/admin/hizmetler/[id]/page.tsx (edit) | ✅ |
+| src/app/admin/hizmetler/service-form.tsx | ✅ |
+| src/app/admin/hizmetler/delete-button.tsx | ✅ |
+| src/app/admin/hizmetler/featured-button.tsx | ✅ |
+| src/app/admin/hizmetler/status-badge.tsx | ✅ |
+| src/app/(public)/hizmetler/page.tsx (public liste) | ✅ |
+| src/app/(public)/hizmetler/[slug]/page.tsx (detay) | ✅ |
+
+## Test sonuçları (Faz 7)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-14 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-14 |
+| Production Build | ✅ 20 route, 0 hata | 2026-11-14 |
 
 ## Faz 6 özeti
 

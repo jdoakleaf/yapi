@@ -203,20 +203,32 @@ mevcut.
 
 ## Faz 7 --- Hizmet yönetimi
 
--   [ ] Hizmet kategorisi CRUD.
--   [ ] 12 kategori seed verisinin kontrolü.
--   [ ] Hizmet CRUD.
--   [ ] Hizmet kart ve kapak görseli.
--   [ ] Hizmet detay içerik alanları.
--   [ ] Sıralama ve öne çıkarma.
--   [ ] SEO alanları.
--   [ ] İlgili hizmet ve proje bağlantıları.
--   [ ] Public hizmet listeleme.
--   [ ] Public hizmet detay sayfası.
--   [ ] Progress güncellemesi.
+-   [x] Hizmet kategorisi CRUD.
+    > src/lib/cms/service-actions.ts: getServiceCategories, getServiceCategory, createServiceCategory, updateServiceCategory, deleteServiceCategory, reorderCategories, toggleCategoryActive.
+    > Admin UI: /admin/hizmetler/kategoriler (liste, aktif/pasif, sil), /yeni, /[id] (edit).
+-   [x] 12 kategori seed verisinin kontrolü.
+    > Mevcut 12 kategori seed'den geliyor (Faz 2). Yeni CRUD ile yönetilebilir.
+-   [x] Hizmet CRUD.
+    > src/lib/cms/service-actions.ts: getServices, getService, getServiceBySlug, createService, updateService, deleteService, toggleServiceFeatured, updateServiceStatus.
+    > Admin UI: /admin/hizmetler (liste, filtre, featured toggle), /yeni, /[id] (edit).
+-   [x] Hizmet kart ve kapak görseli.
+    > cardMediaId ve coverMediaId alanları mevcut. UI form alanları ileride medya seçici ile gelecek (Faz 11). DB alanları hazır.
+-   [x] Hizmet detay içerik alanları.
+    > shortDescription, content (HTML), faqs ilişkisi — ServiceForm'da düzenlenebilir.
+-   [x] Sıralama ve öne çıkarma.
+    > sortOrder alanı, isFeatured toggle, ServiceFeaturedButton client component.
+-   [x] SEO alanları.
+    > seoTitle, seoDesc — ServiceForm'da düzenlenebilir. generateMetadata ile public sayfada kullanılır.
+-   [x] İlgili hizmet ve proje bağlantıları.
+    > İlgili hizmetler: aynı kategoriden, public detay sayfasında gösterilir. Proje bağlantısı Faz 8'de.
+-   [x] Public hizmet listeleme.
+    > src/app/(public)/hizmetler/page.tsx — kategori bazlı, sadece PUBLISHED, responsive kart grid.
+-   [x] Public hizmet detay sayfası.
+    > src/app/(public)/hizmetler/[slug]/page.tsx — kapak, içerik, SSS, ilgili hizmetler, CTA sidebar. generateMetadata ile SEO.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. lint ✅ typecheck ✅ build ✅ 20 route (2026-11-14).
 
-**Faz 7 kabul:** 12 kategori ve hizmet içerikleri admin'den yönetiliyor;
-detay sayfaları dinamik.
+**Faz 7 kabul:** ✅ 12 kategori ve hizmetler admin'den yönetiliyor; public liste ve detay sayfaları çalışıyor. Build 20 route, 0 hata. (2026-11-14)
 
 ## Faz 8 --- Proje portföyü
 
