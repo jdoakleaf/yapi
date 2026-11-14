@@ -341,7 +341,8 @@
 
 | Commit | Açıklama | Tarih |
 |--------|----------|-------|
-| addf7c0 | feat: Faz 3 - Auth.js (NextAuth v5) + RBAC | 2026-11-13 |
+| fa76940 | feat: Faz 14 - Production deployment readiness | 2026-11-15 |
+| 17f296b | feat: Faz 13 - Security and quality tests | 2026-11-15 |
 | d4523a7 | docs: update checklist and progress - Faz 2 complete | 2026-11-13 |
 | ee9e527 | feat: Faz 2 complete - migration and seed verified | 2026-11-13 |
 | 73a413e | feat: Faz 2 - Prisma 5.22.0 schema ve seed | 2026-11-13 |
