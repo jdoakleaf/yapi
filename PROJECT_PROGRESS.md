@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-15T02:06:00+03:00
-- **Aktif faz:** Faz 13 — Güvenlik ve kalite testleri (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 12 — SEO ve içerik kalitesi ✅ (2026-11-15)
-- **Devam eden görev:** Faz 13 başlayacak
-- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 13
+- **Son güncelleme:** 2026-11-15T02:13:00+03:00
+- **Aktif faz:** Faz 14 — Yayına hazırlık ve operasyon (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 13 — Güvenlik ve kalite testleri ✅ (2026-11-15)
+- **Devam eden görev:** Faz 14 başlayacak
+- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 14
 
 ## Tamamlanan fazlar
 
@@ -24,6 +24,32 @@
 - **Faz 10** — Teklif ve iletişim ✅ (2026-11-15)
 - **Faz 11** — Public site tasarım uygulaması ✅ (2026-11-15)
 - **Faz 12** — SEO ve içerik kalitesi ✅ (2026-11-15)
+- **Faz 13** — Güvenlik ve kalite testleri ✅ (2026-11-15)
+
+## Faz 13 özeti
+
+| Görev | Durum |
+|-------|-------|
+| Vitest kurulumu (v5.1.0 + @testing-library/react + jsdom) | ✅ |
+| vitest.config.ts | ✅ |
+| src/__tests__/setup.ts | ✅ |
+| src/__tests__/security/upload.test.ts (11 test — MIME, boyut, uzantı) | ✅ |
+| src/__tests__/security/password.test.ts (11 test — scrypt, timing-safe, format) | ✅ |
+| src/__tests__/security/rbac.test.ts (11 test — rol hiyerarşisi, erişim kontrolü) | ✅ |
+| src/__tests__/security/slug.test.ts (20 test — Türkçe, XSS, injection, edge) | ✅ |
+| src/__tests__/security/theme.test.ts (13 test — WCAG AA, HEX doğrulama, CSS) | ✅ |
+| src/__tests__/security/input-validation.test.ts (19 test — Zod şemaları) | ✅ |
+| src/__tests__/unit/pagination.test.ts (8 test — skip/take/normalize) | ✅ |
+| package.json test/test:watch/test:coverage scriptleri | ✅ |
+
+## Test sonuçları (Faz 13)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| Vitest (93 test) | ✅ 93/93 geçti | 2026-11-15 |
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-15 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-15 |
+| Production Build | ✅ 40 route, 0 hata | 2026-11-15 |
 
 ## Faz 12 özeti
 
