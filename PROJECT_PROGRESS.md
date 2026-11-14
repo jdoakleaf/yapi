@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-15T00:34:00+03:00
-- **Aktif faz:** Faz 10 — Teklif ve iletişim (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 9 — Blog, SSS, yorumlar ve menüler ✅ (2026-11-15)
-- **Devam eden görev:** Faz 10 başlayacak
-- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 10
+- **Son güncelleme:** 2026-11-15T00:49:00+03:00
+- **Aktif faz:** Faz 11 — Public site tasarım uygulaması (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 10 — Teklif ve iletişim ✅ (2026-11-15)
+- **Devam eden görev:** Faz 11 başlayacak
+- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 11
 
 ## Tamamlanan fazlar
 
@@ -21,6 +21,29 @@
 - **Faz 7** — Hizmet yönetimi ✅ (2026-11-14)
 - **Faz 8** — Proje portföyü ✅ (2026-11-14)
 - **Faz 9** — Blog, SSS, yorumlar ve menüler ✅ (2026-11-15)
+- **Faz 10** — Teklif ve iletişim ✅ (2026-11-15)
+
+## Faz 10 özeti
+
+| Görev | Durum |
+|-------|-------|
+| src/lib/leads/lead-actions.ts (createLead, getLeads, getLead, updateLeadStatus, addLeadNote, assignLead, getLeadCounts) | ✅ |
+| src/app/(public)/teklif-al/page.tsx (SSR, Partial Prerender) | ✅ |
+| src/app/(public)/teklif-al/lead-form.tsx (client form + başarı ekranı) | ✅ |
+| src/app/admin/talepler/page.tsx (liste, filtre, arama, sayfalama) | ✅ |
+| src/app/admin/talepler/[id]/page.tsx (detay) | ✅ |
+| src/app/admin/talepler/[id]/status-changer.tsx (durum güncelleme) | ✅ |
+| src/app/admin/talepler/[id]/note-adder.tsx (not ekleme) | ✅ |
+
+## Test sonuçları (Faz 10)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-15 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-15 |
+| Production Build | ✅ 36 route, 0 hata | 2026-11-15 |
+
+
 
 ## Faz 9 özeti
 

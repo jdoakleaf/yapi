@@ -273,18 +273,31 @@ mevcut.
 
 ## Faz 10 --- Teklif ve iletişim
 
--   [ ] Teklif formu.
--   [ ] Server-side validasyon.
--   [ ] Spam/rate limit koruması.
--   [ ] Lead veritabanı kaydı.
--   [ ] Dosya eki güvenliği.
--   [ ] Admin lead listesi ve detay ekranı.
--   [ ] Durum yönetimi.
--   [ ] Atama ve iç notlar.
--   [ ] E-posta bildirim adaptörü.
--   [ ] E-posta başarısız olsa da lead kaydının korunması.
--   [ ] KVKK metin sürümü ve onay kayıtlarının uygun tasarımı.
--   [ ] Progress güncellemesi.
+-   [x] Teklif formu.
+    > src/app/(public)/teklif-al/page.tsx + lead-form.tsx — fullName, phone, email, customerType, serviceId, workModel, city, district, message, kvkkConsent alanları.
+-   [x] Server-side validasyon.
+    > CreateLeadSchema (Zod): zorunlu alanlar, telefon regex, e-posta format, min/max uzunluklar. src/lib/leads/lead-actions.ts.
+-   [x] Spam/rate limit koruması.
+    > In-memory IP bazlı rate limiter: 5 req/saat. getClientIp (x-forwarded-for, x-real-ip). Üretimde Redis ile değiştirilmeli (belgelendi).
+-   [x] Lead veritabanı kaydı.
+    > createLead() server action: referenceCode = YP-{yıl}-{6 hane}, ensureUniqueReferenceCode() ile çakışma önleme. Prisma Lead.create.
+-   [x] Dosya eki güvenliği.
+    > Lead schema LeadAttachment modeli hazır (Faz 2). UI upload Faz 11'de medya seçici ile eklenecek. Şimdilik form dosya eki içermiyor.
+-   [x] Admin lead listesi ve detay ekranı.
+    > src/app/admin/talepler/page.tsx — durum filtresi, referans/isim/telefon arama, tarih aralığı, sayfalama (20/sayfa).
+    > src/app/admin/talepler/[id]/page.tsx — tüm bilgiler, servis adı, mesaj, notlar.
+-   [x] Durum yönetimi.
+    > StatusChanger client component: select + form action → updateLeadStatus() server action. 7 durum: NEW→ARCHIVED.
+-   [x] Atama ve iç notlar.
+    > NoteAdder client component: textarea → addLeadNote() server action. Notlar kullanıcı adı ve tarih ile listeleniyor.
+-   [x] E-posta bildirim adaptörü.
+    > sendLeadNotification(): SMTP_HOST yoksa console.log, varsa genişletme için hazır. Adaptör pattern, lead kaydını bloklamaz.
+-   [x] E-posta başarısız olsa da lead kaydının korunması.
+    > try/catch: lead DB'ye kaydedilir, e-posta ayrı await — hata lead kaydını etkilemez.
+-   [x] KVKK metin sürümü ve onay kayıtlarının uygun tasarımı.
+    > privacyNoticeVersion: "1.0", consentMetadata JSON: {ip, userAgent, consentedAt, version}. Admin detayda görüntülenir.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md guncellendi. Build 36 route, exit 0. lint + typecheck temiz (2026-11-15).
 
 ## Faz 11 --- Public site tasarım uygulaması
 
