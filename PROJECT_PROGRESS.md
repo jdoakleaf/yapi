@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-14T23:57:00+03:00
-- **Aktif faz:** Faz 9 — Blog, SSS, yorumlar ve menüler (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 8 — Proje portföyü ✅ (2026-11-14)
-- **Devam eden görev:** Faz 9 başlayacak
-- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 9
+- **Son güncelleme:** 2026-11-15T00:34:00+03:00
+- **Aktif faz:** Faz 10 — Teklif ve iletişim (kullanıcı onayı bekleniyor)
+- **Son tamamlanan görev:** Faz 9 — Blog, SSS, yorumlar ve menüler ✅ (2026-11-15)
+- **Devam eden görev:** Faz 10 başlayacak
+- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 10
 
 ## Tamamlanan fazlar
 
@@ -20,6 +20,36 @@
 - **Faz 6** — Sayfa ve blok editörü ✅ (2026-11-14)
 - **Faz 7** — Hizmet yönetimi ✅ (2026-11-14)
 - **Faz 8** — Proje portföyü ✅ (2026-11-14)
+- **Faz 9** — Blog, SSS, yorumlar ve menüler ✅ (2026-11-15)
+
+## Faz 9 özeti
+
+| Görev | Durum |
+|-------|-------|
+| src/lib/cms/content-actions.ts (Blog/FAQ/Testimonial/Menu server actions) | ✅ |
+| src/app/admin/blog/page.tsx (liste) | ✅ |
+| src/app/admin/blog/delete-button.tsx | ✅ |
+| src/app/admin/blog/blog-form.tsx | ✅ |
+| src/app/admin/blog/yeni/page.tsx | ✅ |
+| src/app/admin/blog/[id]/page.tsx (edit) | ✅ |
+| src/app/admin/sss/page.tsx | ✅ |
+| src/app/admin/sss/faq-list.tsx | ✅ |
+| src/app/admin/yorumlar/page.tsx | ✅ |
+| src/app/admin/yorumlar/testimonial-list.tsx | ✅ |
+| src/app/admin/menuler/page.tsx | ✅ |
+| src/app/admin/menuler/menu-manager.tsx | ✅ |
+| src/app/(public)/blog/page.tsx (public liste) | ✅ |
+| src/app/(public)/blog/[slug]/page.tsx (detay + SEO) | ✅ |
+
+## Test sonuçları (Faz 9)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-15 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-15 |
+| Production Build | ✅ 33 route, 0 hata | 2026-11-15 |
+
+
 
 ## Faz 8 özeti
 

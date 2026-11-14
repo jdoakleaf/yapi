@@ -256,13 +256,20 @@ mevcut.
 
 ## Faz 9 --- Blog, SSS, yorumlar ve menüler
 
--   [ ] Blog CRUD ve yayınlama.
--   [ ] Blog detay ve liste sayfaları.
--   [ ] SSS CRUD ve hizmet ilişkisi.
--   [ ] Yorum CRUD ve yayın durumu.
--   [ ] Menü ve alt menü CRUD.
--   [ ] Sıralama ve aktif/pasif.
--   [ ] Progress güncellemesi.
+-   [x] Blog CRUD ve yayınlama.
+    > src/lib/cms/content-actions.ts: createBlogPost, updateBlogPost, deleteBlogPost, updateBlogStatus, getBlogPost, getBlogPosts. Admin: /admin/blog, /admin/blog/yeni, /admin/blog/[id].
+-   [x] Blog detay ve liste sayfaları.
+    > src/app/(public)/blog/page.tsx (SSR, Partial Prerender), src/app/(public)/blog/[slug]/page.tsx (detay, SEO, generateMetadata).
+-   [x] SSS CRUD ve hizmet ilişkisi.
+    > createFAQ, updateFAQ, deleteFAQ, getFAQs, reorderFAQs (content-actions.ts). Admin: /admin/sss, /admin/sss/faq-list.tsx. Hizmet ilişkisi serviceId nullable alanı ile.
+-   [x] Yorum CRUD ve yayın durumu.
+    > createTestimonial, updateTestimonial, deleteTestimonial, getTestimonials, toggleTestimonialPublished (content-actions.ts). Admin: /admin/yorumlar, /admin/yorumlar/testimonial-list.tsx.
+-   [x] Menü ve alt menü CRUD.
+    > createMenu, updateMenu, deleteMenu, getMenus, createMenuItem, updateMenuItem, deleteMenuItem, reorderMenuItems (content-actions.ts). Admin: /admin/menuler, /admin/menuler/menu-manager.tsx.
+-   [x] Sıralama ve aktif/pasif.
+    > reorderFAQs, reorderMenuItems, toggleTestimonialPublished, MenuItem.isActive, Menu.isActive alanları yönetiliyor.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md guncellendi. Build 33 route, exit 0. lint + typecheck temiz (2026-11-15).
 
 ## Faz 10 --- Teklif ve iletişim
 
