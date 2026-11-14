@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-15T02:25:00+03:00
-- **Aktif faz:** Faz 15 — Opsiyonel hardening (kullanıcı onayı bekleniyor)
-- **Son tamamlanan görev:** Faz 14 — Yayına hazırlık ve operasyon ✅ (2026-11-15)
+- **Son güncelleme:** 2026-11-15T02:33:00+03:00
+- **Aktif faz:** Tamamlandı ✅ — 15/15 faz
+- **Son tamamlanan görev:** Faz 15 — Opsiyonel hardening ✅ (2026-11-15)
 - **Devam eden görev:** —
-- **Sıradaki tek adım:** Kullanıcı onayı sonrası Faz 15 (opsiyonel)
+- **Sıradaki tek adım:** Production deploy (DEPLOYMENT.md rehberi)
 
 ## Tamamlanan fazlar
 
@@ -26,6 +26,27 @@
 - **Faz 12** — SEO ve içerik kalitesi ✅ (2026-11-15)
 - **Faz 13** — Güvenlik ve kalite testleri ✅ (2026-11-15)
 - **Faz 14** — Yayına hazırlık ve operasyon ✅ (2026-11-15)
+- **Faz 15** — Opsiyonel hardening ✅ (2026-11-15)
+
+## Faz 15 özeti
+
+| Görev | Durum |
+|-------|-------|
+| src/proxy.ts (@next/codemod middleware-to-proxy — deprecation uyarısı giderildi) | ✅ |
+| src/lib/email/mailer.ts (Nodemailer SMTP transporter, sendMail) | ✅ |
+| src/lib/email/templates.ts (leadNotificationTemplate — HTML + text) | ✅ |
+| src/lib/email/notifications.ts (notifyNewLead — ADMIN_EMAIL'e bildirim) | ✅ |
+| src/lib/leads/lead-actions.ts (notifyNewLead entegrasyonu) | ✅ |
+| .env.example (ADMIN_EMAIL eklendi) | ✅ |
+
+## Test sonuçları (Faz 15)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| Vitest (93 test) | ✅ 93/93 geçti | 2026-11-15 |
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-15 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-15 |
+| Production Build | ✅ 41 route, 0 hata | 2026-11-15 |
 
 ## Faz 14 özeti
 

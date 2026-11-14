@@ -1,8 +1,9 @@
 /**
- * src/middleware.ts
+ * src/proxy.ts
  * Admin route'larını korur — Edge Runtime uyumlu.
  * Ağır Node.js modülleri (crypto, prisma) içermeyen edge-config kullanır.
  *
+ * Next.js 16: middleware.ts → proxy.ts (yeni konvansiyon)
  * Ek: Public sayfalar için DB redirect lookup (via /api/redirect-check endpoint).
  */
 
@@ -16,7 +17,7 @@ const { auth } = NextAuth(edgeAuthConfig);
 // Admin koruma middleware'i (NextAuth)
 const adminMiddleware = auth;
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Admin route'ları: NextAuth middleware'ine devret

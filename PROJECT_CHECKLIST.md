@@ -427,6 +427,23 @@ mevcut.
 
 **Faz 14 kabul:** ✅ Vitest: 93/93, ESLint: 0 hata, TypeScript: temiz, Build: 41 route, 0 hata. (2026-11-15)
 
+## Faz 15 --- Opsiyonel hardening
+
+-   [x] middleware.ts → proxy.ts migrasyonu.
+    > src/proxy.ts oluşturuldu (@next/codemod middleware-to-proxy). export default proxy() — Next.js 16 konvansiyonu. Deprecation uyarısı giderildi. Build çıktısında "Proxy (Middleware)" olarak görünüyor.
+-   [x] E-posta bildirimleri (Nodemailer).
+    > nodemailer@10.5.0 + @types/nodemailer kuruldu. src/lib/email/mailer.ts (SMTP transporter, sendMail). src/lib/email/templates.ts (HTML+text şablonu, leadNotificationTemplate). src/lib/email/notifications.ts (notifyNewLead). lead-actions.ts'e entegre edildi. SMTP yoksa sessizce geçer.
+-   [x] Admin e-posta bildirimi env değişkeni.
+    > .env.example: ADMIN_EMAIL eklendi. Yeni talep geldiğinde ADMIN_EMAIL'e bildirim gider.
+-   [x] In-memory rate limiter — üretim notu.
+    > Mevcut in-memory Map rate limiter korundu. DEPLOYMENT.md'de Redis geçiş notu mevcut.
+-   [x] Lint, typecheck, test ve build.
+    > ESLint: ✅ 0 hata | TypeScript: ✅ temiz | Vitest: ✅ 93/93 | Build: ✅ 41 route, 0 hata.
+-   [x] Progress güncellemesi.
+    > PROJECT_PROGRESS.md güncellendi. Faz 15 özeti eklendi (2026-11-15).
+
+**Faz 15 kabul:** ✅ Vitest: 93/93, ESLint: 0 hata, TypeScript: temiz, Build: 41 route, 0 hata. (2026-11-15)
+
 ## Her görevden sonra zorunlu kapanış
 
 -   [ ] İlgili görev(ler) doğru durumla güncellendi.

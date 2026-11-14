@@ -6,6 +6,7 @@ import { CustomerType, LeadStatus, WorkModel } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { headers } from "next/headers";
+import { notifyNewLead } from "@/lib/email/notifications";
 
 // ---------------------------------------------------------------------------
 // Rate limiting (in-memory, IP bazlı — üretimde Redis önerilir)
@@ -60,30 +61,6 @@ async function ensureUniqueReferenceCode(): Promise<string> {
     if (!existing) return code;
   }
   throw new Error("Referans kodu üretilemedi");
-}
-
-// ---------------------------------------------------------------------------
-// E-posta bildirimi (adaptör pattern)
-// ---------------------------------------------------------------------------
-
-async function sendLeadNotification(lead: {
-  referenceCode: string;
-  fullName: string;
-  phone: string;
-  email?: string | null;
-}): Promise<void> {
-  // SMTP yapılandırması yoksa loglama yeterli
-  const smtpHost = process.env.SMTP_HOST;
-  if (!smtpHost) {
-    console.log(
-      `[LEAD] Yeni talep: ${lead.referenceCode} — ${lead.fullName} (${lead.phone})`,
-    );
-    return;
-  }
-  // İleride nodemailer ile gerçek e-posta gönderimi buraya eklenecek
-  console.log(
-    `[LEAD][EMAIL] ${lead.referenceCode} için bildirim gönderildi: ${lead.email ?? "e-posta yok"}`,
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -183,11 +160,14 @@ export async function createLead(formData: FormData) {
       },
     });
 
-    await sendLeadNotification({
-      referenceCode: lead.referenceCode,
+    // E-posta bildirimi (Nodemailer — ADMIN_EMAIL + SMTP_HOST gerekli)
+    // SMTP/ADMIN_EMAIL tanımlı değilse sessizce geçer
+    await notifyNewLead({
+      leadId: lead.id,
       fullName: lead.fullName,
+      email: lead.email ?? "",
       phone: lead.phone,
-      email: lead.email,
+      message: lead.message ?? "",
     });
 
     return { success: true, referenceCode: lead.referenceCode };
