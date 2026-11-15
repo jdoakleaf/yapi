@@ -3,11 +3,11 @@
 ## Genel durum
 
 - **Proje:** Kurumsal Yapı, İnşaat ve Uygulama Web Platformu
-- **Son güncelleme:** 2026-11-15T02:33:00+03:00
-- **Aktif faz:** Tamamlandı ✅ — 15/15 faz
-- **Son tamamlanan görev:** Faz 15 — Opsiyonel hardening ✅ (2026-11-15)
+- **Son güncelleme:** 2026-11-15T09:43:00+03:00
+- **Aktif faz:** Tamamlandı ✅ — 15/15 faz + Plesk deployment
+- **Son tamamlanan görev:** Plesk SSH'siz deployment ✅ (2026-11-15)
 - **Devam eden görev:** —
-- **Sıradaki tek adım:** Production deploy (DEPLOYMENT.md rehberi)
+- **Sıradaki tek adım:** GitHub'a push → Plesk Panel deploy (DEPLOYMENT_PLESK.md rehberi)
 
 ## Tamamlanan fazlar
 
@@ -27,6 +27,26 @@
 - **Faz 13** — Güvenlik ve kalite testleri ✅ (2026-11-15)
 - **Faz 14** — Yayına hazırlık ve operasyon ✅ (2026-11-15)
 - **Faz 15** — Opsiyonel hardening ✅ (2026-11-15)
+- **Plesk SSH'siz deployment** ✅ (2026-11-15)
+
+## Plesk SSH'siz deployment özeti
+
+| Görev | Durum |
+|-------|-------|
+| `server.js` — startup'ta `prisma migrate deploy`, PORT env, platform-aware binary | ✅ |
+| `src/app/setup/page.tsx` — İlk kurulum sihirbazı (super_admin kontrolü) | ✅ |
+| `src/app/setup/actions.ts` — setupAction: userRole_, valueJson, hashPassword, auditLog | ✅ |
+| `src/app/setup/setup-form.tsx` — Mavi temalı client form | ✅ |
+| `DEPLOYMENT_PLESK.md` — Git Extension + FTP yöntemleri, /setup rehberi | ✅ |
+
+## Test sonuçları (Plesk deployment)
+
+| Test | Sonuç | Tarih |
+|------|-------|-------|
+| Vitest (93 test) | ✅ 93/93 geçti | 2026-11-15 |
+| ESLint | ✅ 0 hata, 0 uyarı | 2026-11-15 |
+| TypeScript (tsc --noEmit) | ✅ Temiz | 2026-11-15 |
+| Production Build | ✅ 42 route (/setup dahil), 0 hata | 2026-11-15 |
 
 ## Faz 15 özeti
 

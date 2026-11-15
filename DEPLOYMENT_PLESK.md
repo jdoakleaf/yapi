@@ -1,34 +1,43 @@
-# DEPLOYMENT_PLESK.md
-# Plesk Üzerinde Yayınlama Rehberi
+# DEPLOYMENT_PLESK.md — SSH Erişimi Olmadan Plesk'e Deploy
 
-Bu rehber, uygulamanın Plesk kontrol paneli üzerinden nasıl yayınlanacağını adım adım anlatır.
+> [!IMPORTANT]
+> Bu rehber **SSH erişimi olmayan** Plesk ortamları için hazırlanmıştır.
+> Tüm işlemler Plesk Panel arayüzü ve FTP üzerinden yapılır.
 
 ---
 
-## Gereksinimler
+## Genel Yaklaşım
 
-| Bileşen | Minimum |
-|---------|---------|
-| Plesk sürümü | 18.0+ |
-| Plesk Node.js Extension | Kurulu ve etkin |
-| Plesk PostgreSQL Extension | Kurulu ve etkin |
-| Node.js | v20 LTS veya v22 LTS |
-| RAM | 1 GB+ (512 MB minimum) |
-| Disk | 2 GB+ (uploads + build artifacts) |
+```
+Yerel Makine          Plesk Panel          Domain
+─────────────         ───────────          ──────
+pnpm build      ──▶  Git Extension  ──▶   node server.js
+                      (veya FTP)           ↓
+                                     prisma migrate deploy  (otomatik)
+                                           ↓
+                                     https://domain.com/setup  (ilk açılış)
+                                           ↓
+                                     Admin hesabı oluştur
+```
+
+**`server.js` uygulama her başlarken otomatik olarak:**
+1. `prisma migrate deploy` çalıştırır (SSH'sız migration!)
+2. Next.js sunucusunu başlatır
+3. İlk açılışta `/setup` adresi admin oluşturma sihirbazını gösterir
 
 ---
 
 ## Bölüm 1 — Plesk Eklentileri
 
-Plesk Panel → **Extensions** → şunları arayın ve kurun:
+Plesk Panel → **Extensions (Eklentiler)** → şunları arayıp kurun:
 
-- **Node.js** (Plesk resmi eklentisi)
-- **PostgreSQL** (veritabanı yönetimi için)
-- **Let's Encrypt** (SSL — ücretsiz)
+- ✅ **Node.js** (Plesk resmi eklentisi — zorunlu)
+- ✅ **PostgreSQL** veya **Git** (hangisi yoksa)
+- ✅ **Let's Encrypt** (ücretsiz SSL)
 
 ---
 
-## Bölüm 2 — Veritabanı Oluşturma
+## Bölüm 2 — Veritabanı Oluşturma (Plesk Panel)
 
 **Plesk Panel → Databases → Add Database**
 
@@ -36,171 +45,189 @@ Plesk Panel → **Extensions** → şunları arayın ve kurun:
 |------|-------|
 | Database name | `yapi_platform` |
 | Database type | **PostgreSQL** |
-| Database server | localhost / 127.0.0.1 |
 | Username | `yapi_user` |
-| Password | Güçlü bir parola (not edin) |
+| Password | Güçlü bir parola — not edin |
 
-> [!IMPORTANT]
-> PostgreSQL portu Plesk'te genellikle **5432**'dir (embedded-postgres gibi 5433 değil).
-
-Bağlantı URL'si şu formatta olacak:
+Bağlantı URL'si (kopyalayın, Bölüm 4'te kullanacaksınız):
 ```
 postgresql://yapi_user:PAROLA@localhost:5432/yapi_platform
 ```
 
+> [!NOTE]
+> Plesk PostgreSQL portu genellikle **5432**'dir.
+
 ---
 
-## Bölüm 3 — Domain ve Node.js Uygulaması
+## Bölüm 3 — Kodu Sunucuya Yükleme
 
-### 3.1 Domain Ekle
+İki yöntemden birini seçin:
 
-Plesk Panel → **Websites & Domains → Add Domain** (veya mevcut domain'i kullanın)
+---
 
-### 3.2 Node.js Uygulaması Yapılandır
+### 🅰 Yöntem A: Plesk Git Extension (Önerilen)
 
-Domain üzerinde **Node.js** sekmesine tıklayın:
+**Adım 1 — GitHub'a push edin (yerel makinenizde):**
+```bash
+# Proje klasöründe:
+git remote add origin https://github.com/KULLANICI/yapi-platform.git
+git push -u origin main
+```
+
+**Adım 2 — Plesk Panel → Domain → Git sekmesi:**
+
+- **Repository URL:** `https://github.com/KULLANICI/yapi-platform.git`
+- **Branch:** `main`
+- **Target directory:** `/` (domain kök dizini)
+
+**Adım 3 — Deployment Action alanına yazın:**
+```
+npm install -g pnpm@12 && pnpm install --frozen-lockfile && pnpm build
+```
+
+**Adım 4 — "Deploy" butonuna tıklayın.**
+
+Plesk kodu çeker, komutu çalıştırır. Build tamamlanınca Bölüm 4'e geçin.
+
+> [!TIP]
+> Özel (private) repo için: Git → Authentication → SSH Key veya Personal Access Token girin.
+
+---
+
+### 🅱 Yöntem B: FTP + Zip Upload
+
+**Adım 1 — Yerel makinenizde build yapın:**
+```bash
+cd c:\PROJELER\YAPI2
+pnpm install
+pnpm build
+```
+
+**Adım 2 — Deploy paketi hazırlayın (node_modules HARİÇ):**
+
+Şu klasör/dosyaları zip'leyin:
+```
+✅ .next/
+✅ prisma/
+✅ public/
+✅ scripts/
+✅ src/
+✅ server.js
+✅ package.json
+✅ pnpm-lock.yaml
+✅ next.config.ts
+✅ tsconfig.json
+✅ eslint.config.mjs
+✅ vitest.config.ts
+❌ node_modules/   → EKLEME (çok büyük)
+❌ .git/           → EKLEME
+❌ .pg-data/       → EKLEME
+❌ .env.local      → EKLEME (güvenlik!)
+```
+
+**Adım 3 — Plesk File Manager ile upload edin:**
+
+Plesk Panel → **Files** → Domain klasörü → **Upload** → zip dosyasını seçin → **Extract**
+
+**Adım 4 — Plesk Node.js → "NPM Install" butonuna tıklayın.**
+
+Bu buton `npm install` çalıştırır ve bağımlılıkları kurar.
+
+> [!WARNING]
+> Plesk'te `npm install` çalışır ama `pnpm` olmayabilir. Bu durumda `package.json`'daki `packageManager` alanına rağmen npm ile kurulum yapılır. Sorun çıkarsa Plesk support'tan `pnpm` kurmasını isteyin.
+
+---
+
+## Bölüm 4 — Ortam Değişkenleri (Plesk Panel)
+
+**Plesk → Domain → Node.js → Environment Variables:**
+
+| Değişken | Değer |
+|----------|-------|
+| `NODE_ENV` | `production` |
+| `DATABASE_URL` | `postgresql://yapi_user:PAROLA@localhost:5432/yapi_platform` |
+| `AUTH_SECRET` | Rastgele 32+ karakter (aşağıya bakın) |
+| `NEXT_PUBLIC_APP_URL` | `https://your-domain.com` |
+| `ADMIN_EMAIL` | `admin@your-domain.com` |
+| `SMTP_HOST` | `smtp.provider.com` *(opsiyonel)* |
+| `SMTP_PORT` | `587` *(opsiyonel)* |
+| `SMTP_USER` | *(opsiyonel)* |
+| `SMTP_PASS` | *(opsiyonel)* |
+| `SMTP_FROM` | `Firma <noreply@domain.com>` *(opsiyonel)* |
+
+**AUTH_SECRET üretmek için** (yerel makinenizde PowerShell):
+```powershell
+[System.Web.Security.Membership]::GeneratePassword(40, 10)
+# veya:
+-join ((65..90) + (97..122) + (48..57) | Get-Random -Count 40 | % {[char]$_})
+```
+
+> [!CAUTION]
+> `AUTH_SECRET` değerini asla kaynak koda veya Git'e eklemeyin.
+
+---
+
+## Bölüm 5 — Node.js Uygulaması Yapılandırma
+
+**Plesk → Domain → Node.js:**
 
 | Alan | Değer |
 |------|-------|
 | Node.js version | `20.x LTS` |
-| Document root | `/httpdocs` |
-| Application root | `/httpdocs` (proje dizini) |
+| Document root | `/` |
 | Application startup file | `server.js` |
 | Application mode | `production` |
-| Application URL | `https://your-domain.com` |
 
-> [!NOTE]
-> "Application root" ile "Document root" aynı dizin olabilir. Next.js statik dosyaları `public/` ve `.next/static/` altında tutar; Nginx yönlendirmesi otomatik ayarlanır.
+**"Enable Node.js"** butonuna tıklayın.
 
 ---
 
-## Bölüm 4 — Dosyaları Sunucuya Yükleme
+## Bölüm 6 — Uygulamayı Başlatma ve İlk Kurulum
 
-### Yöntem A: Git (Önerilen)
+**Plesk → Node.js → "Restart App"** butonuna tıklayın.
 
-Plesk Terminal (SSH) veya Plesk Git Extension ile:
+Uygulama başlarken `server.js` otomatik olarak:
+1. `prisma migrate deploy` → veritabanı tabloları oluşturulur
+2. Next.js sunucusu başlatılır
 
-```bash
-# Plesk File Manager yerine SSH terminali açın
-cd /var/www/vhosts/your-domain.com/httpdocs
+**İlk kurulum sihirbazı:**
 
-# Git reposunu klonlayın
-git clone https://github.com/kullaniciadi/yapi-platform.git .
-
-# Veya mevcut repo ise pull
-git pull origin main
+Tarayıcınızda açın:
+```
+https://your-domain.com/setup
 ```
 
-### Yöntem B: FTP/SFTP
+Karşınıza çıkan formda:
+- **Firma / Site Adı** → şirket adınız
+- **Ad Soyad** → admin kullanıcı adı
+- **E-posta** → giriş için kullanılacak
+- **Parola** → en az 12 karakter
 
-Proje dosyalarını domain'in `httpdocs` klasörüne yükleyin.  
-`.next/` ve `node_modules/` gibi ağır dizinleri sunucuda oluşturun (`pnpm install` ve `pnpm build` ile).
+"Kurulumu Tamamla" → otomatik `/admin/login`'e yönlendirir.
+
+> [!IMPORTANT]
+> `/setup` sayfası bir kez admin oluşturulduktan sonra otomatik kapanır. Tekrar açmaya çalışanlar `/admin/login`'e yönlendirilir.
 
 ---
 
-## Bölüm 5 — Ortam Değişkenleri
+## Bölüm 7 — SSL (Let's Encrypt)
 
-### 5.A Plesk Panel'den
-
-**Node.js sekmesi → Environment Variables** bölümüne aşağıdakileri ekleyin:
-
-```
-NODE_ENV=production
-DATABASE_URL=postgresql://yapi_user:PAROLA@localhost:5432/yapi_platform
-AUTH_SECRET=EN_AZ_32_KARAKTER_RASTGELE_STRING
-NEXT_PUBLIC_APP_URL=https://your-domain.com
-SMTP_HOST=smtp.your-provider.com
-SMTP_PORT=587
-SMTP_USER=noreply@your-domain.com
-SMTP_PASS=smtp-parola
-SMTP_FROM=Şirket Adı <noreply@your-domain.com>
-ADMIN_EMAIL=admin@your-domain.com
-STORAGE_PROVIDER=local
-```
-
-> [!CAUTION]
-> `AUTH_SECRET` üretmek için: `openssl rand -base64 32`  
-> Bu değeri asla kaynak koduna veya Git'e eklemeyin.
-
-### 5.B .env.local ile (SSH)
-
-```bash
-cd /var/www/vhosts/your-domain.com/httpdocs
-cp .env.example .env.local
-nano .env.local   # değerleri düzenleyin
-```
-
----
-
-## Bölüm 6 — Bağımlılıkları Kurma ve Build
-
-**Node.js sekmesi → Run script** (veya SSH terminali):
-
-```bash
-cd /var/www/vhosts/your-domain.com/httpdocs
-
-# pnpm kurulu değilse:
-npm install -g pnpm
-
-# Bağımlılıkları kur
-pnpm install --frozen-lockfile
-
-# Prisma client üret
-pnpm db:generate
-
-# Veritabanı migration çalıştır
-pnpm db:migrate:deploy
-
-# Seed (ilk kurulumda — 12 kategori, varsayılan ayarlar)
-pnpm db:seed
-
-# Production build
-pnpm build
-```
-
-> [!TIP]
-> İlk admin kullanıcısı için:
-> ```bash
-> pnpm create-admin
-> ```
-
----
-
-## Bölüm 7 — Uygulamayı Başlatma
-
-**Plesk Node.js sekmesi → Restart App** butonuna tıklayın.
-
-Plesk, `server.js` dosyasını `node server.js` ile başlatır ve Nginx üzerinden proxyler.
-
-Durum kontrolü:
-```
-https://your-domain.com/api/health
-```
-`200 OK` ve `{"status":"ok","db":"ok"}` dönmeli.
-
----
-
-## Bölüm 8 — SSL (Let's Encrypt)
-
-**Domain → SSL/TLS Certificates → Let's Encrypt**
+**Plesk → Domain → SSL/TLS Certificates → Let's Encrypt**
 
 - Domain ve www subdomain seçin
-- **Force HTTPS redirect** etkinleştirin
-- Sertifika otomatik yenilenir
+- **Force HTTPS redirect** ✅ etkinleştirin
+- Kaydet → sertifika otomatik kurulur
 
-> [!NOTE]
-> HSTS başlığı zaten `next.config.ts`'de etkin (2 yıl). SSL zorunludur.
+HSTS başlığı zaten `next.config.ts`'de etkin (2 yıl).
 
 ---
 
-## Bölüm 9 — Nginx Ek Yapılandırması (Plesk)
+## Bölüm 8 — Nginx Statik Dosya Optimizasyonu
 
-**Domain → Apache & Nginx Settings → Additional Nginx directives** alanına:
+**Plesk → Domain → Apache & Nginx Settings → Additional Nginx directives:**
 
 ```nginx
-# Next.js statik dosyaları — uzun süreli cache
+# Next.js statik varlıklar — 1 yıl cache
 location /_next/static/ {
-    alias /var/www/vhosts/your-domain.com/httpdocs/.next/static/;
     expires 365d;
     add_header Cache-Control "public, immutable";
     access_log off;
@@ -208,177 +235,89 @@ location /_next/static/ {
 
 # Yüklenen medya dosyaları
 location /uploads/ {
-    alias /var/www/vhosts/your-domain.com/httpdocs/public/uploads/;
     expires 30d;
     add_header Cache-Control "public";
     access_log off;
 }
 
-# Favicon ve statik public dosyaları
-location = /favicon.ico {
-    alias /var/www/vhosts/your-domain.com/httpdocs/public/favicon.ico;
-    expires 7d;
-    access_log off;
-}
-
 # Gzip sıkıştırma
 gzip on;
-gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+gzip_types text/plain text/css application/json application/javascript image/svg+xml;
 gzip_min_length 1000;
 ```
 
-> [!IMPORTANT]
-> `/var/www/vhosts/your-domain.com/httpdocs` yolunu gerçek domain diziniyle değiştirin.
+---
+
+## Bölüm 9 — Sonraki Güncelleme Deploy
+
+### Yöntem A ile (Git Extension):
+
+1. Yerel makinede değişiklik yapın
+2. `git push origin main`
+3. Plesk → Git → **Pull** (veya otomatik webhook ayarlayın)
+4. Deployment Action otomatik çalışır
+5. Plesk → Node.js → **Restart App**
+
+### Yöntem B ile (FTP):
+
+1. Yerel makinede `pnpm build` yapın
+2. Değişen dosyaları zip'leyip Plesk'e yükleyin
+3. Plesk → Node.js → **Restart App**
+
+> [!NOTE]
+> `server.js` her yeniden başlamada migration kontrol eder. Yeni migration varsa otomatik çalışır — veritabanı yedeksiz güncellemeye gerek yoktur.
 
 ---
 
-## Bölüm 10 — Medya Depolama
+## Bölüm 10 — Veritabanı Yedekleme
 
-Upload dizini sunucuda kalıcı olmalıdır:
+**Plesk → Databases → Backup Manager** (en kolay yol)
 
-```bash
-# Dizini oluştur (yoksa)
-mkdir -p /var/www/vhosts/your-domain.com/httpdocs/public/uploads
-
-# Plesk web kullanıcısına yazma izni ver (psacln veya www-data)
-chmod 755 /var/www/vhosts/your-domain.com/httpdocs/public/uploads
-chown -R psacln:psaserv /var/www/vhosts/your-domain.com/httpdocs/public/uploads
+Veya **Plesk Scheduled Tasks** (Cron) ekleyin:
 ```
-
-> [!WARNING]
-> Plesk'te web kullanıcısı genellikle `psacln` kullanıcısı ve `psaserv` grubudur.  
-> `ls -la /var/www/vhosts/your-domain.com/httpdocs/` ile doğrulayın.
-
----
-
-## Bölüm 11 — Veritabanı Yedekleme
-
-### Manuel Yedek
-
-```bash
-cd /var/www/vhosts/your-domain.com/httpdocs
-pnpm db:backup
-# Yedek: backups/backup-YYYY-MM-DDTHH-MM-SS.sql
-```
-
-### Otomatik Yedek (Plesk Scheduled Tasks)
-
-**Plesk Panel → Scheduled Tasks (Cron Jobs) → Add Task**
-
-```bash
-# Her gün saat 02:00
-0 2 * * *   cd /var/www/vhosts/your-domain.com/httpdocs && pnpm db:backup >> /var/log/yapi-backup.log 2>&1
-```
-
-> [!TIP]
-> Plesk'in kendi veritabanı yedekleme aracı da kullanılabilir:  
-> **Databases → Backup Manager**
-
----
-
-## Bölüm 12 — Güncelleme ve Deploy
-
-```bash
-cd /var/www/vhosts/your-domain.com/httpdocs
-
-# 1. Yedek al
-pnpm db:backup
-
-# 2. Kodu çek
-git pull origin main
-
-# 3. Bağımlılıkları güncelle
-pnpm install --frozen-lockfile
-
-# 4. Migration uygula
-pnpm db:migrate:deploy
-
-# 5. Yeniden build
-pnpm build
-
-# 6. Uygulamayı yeniden başlat (Plesk Panel veya)
-# Plesk → Node.js → Restart App
+# Her gün 02:00
+0 2 * * *   cd /var/www/vhosts/domain.com/httpdocs && node scripts/backup-db.mjs
 ```
 
 ---
 
-## Bölüm 13 — Rollback
+## Bölüm 11 — Sorun Giderme
 
-```bash
-cd /var/www/vhosts/your-domain.com/httpdocs
+### "502 Bad Gateway"
+Uygulama başlamamış olabilir:
+- Plesk → Node.js → **Restart App**
+- Plesk → Node.js → **View Logs** ile hata logunu kontrol edin
 
-# Önceki commit'e dön
-git log --oneline -10
-git checkout <ONCEKI_COMMIT_HASH>
+### "Migration hatası" (ilk başlatmada)
+- `DATABASE_URL` ortam değişkeninin doğru olduğunu kontrol edin
+- Plesk → Databases → veritabanının oluşturulduğunu doğrulayın
+- Plesk → Node.js → Restart App (yeniden denesin)
 
-# Yeniden build
-pnpm build
+### "/setup sayfası yönlendiriyor (admin yok ama setup açılmıyor)"
+- `DATABASE_URL` yanlış olabilir — seed çalışmamıştır
+- Plesk → Databases → phpPgAdmin ile `role` tablosunu kontrol edin
+- `super_admin` rolü yoksa: Plesk → Node.js → `pnpm db:seed` çalıştırın
 
-# Restart
-# Plesk → Node.js → Restart App
+### "pnpm bulunamadı"
+Plesk → Node.js → Application startup file alanında:
 ```
-
-Veritabanı rollback (gerekiyorsa):
-```bash
-# DB'yi sil ve yedeği geri yükle
-dropdb -h localhost -U yapi_user yapi_platform
-createdb -h localhost -U yapi_user yapi_platform
-psql -h localhost -U yapi_user yapi_platform < backups/backup-TARIH.sql
+server.js
 ```
+(pnpm'e bağımlılık yok — `server.js` node ile çalışır)
+
+Build için Plesk terminal yoksa Yöntem A (Git Extension) kullanın.
 
 ---
 
-## Bölüm 14 — Sorun Giderme
+## Bölüm 12 — Hızlı Başvuru
 
-### Uygulama başlamıyor
-
-```bash
-# Node.js loglarını kontrol et
-# Plesk Panel → Node.js → View Logs
-
-# Veya SSH ile:
-tail -f /var/log/plesk/ext-ng.log
-```
-
-### Veritabanı bağlantı hatası
-
-```bash
-# .env.local DATABASE_URL'yi kontrol et
-psql postgresql://yapi_user:PAROLA@localhost:5432/yapi_platform -c "SELECT 1;"
-```
-
-### Build hatası
-
-```bash
-# Prisma client yenile
-pnpm db:generate
-pnpm build
-```
-
-### 502 Bad Gateway
-
-Uygulama henüz başlamamış olabilir. Plesk → Node.js → **Restart App** deneyin.  
-Logları kontrol edin.
-
-### Medya dosyaları görünmüyor
-
-`public/uploads/` dizin izinlerini kontrol edin:
-```bash
-ls -la public/uploads/
-# psacln kullanıcısına ait olmalı
-```
-
----
-
-## Bölüm 15 — Hızlı Başvuru
-
-| Görev | Komut / Yer |
-|-------|-------------|
-| Uygulamayı başlat/yeniden başlat | Plesk → Node.js → Restart App |
-| Health check | `https://domain.com/api/health` |
-| Admin paneli | `https://domain.com/admin` |
-| Yedek al | `pnpm db:backup` |
-| İlk admin oluştur | `pnpm create-admin` |
-| Logları izle | Plesk → Node.js → View Logs |
+| Görev | Yer |
+|-------|-----|
+| İlk kurulum | `https://domain.com/setup` |
+| Yönetici girişi | `https://domain.com/admin` |
+| Sağlık kontrolü | `https://domain.com/api/health` |
+| Uygulama yeniden başlat | Plesk → Node.js → Restart App |
+| Ortam değişkenleri | Plesk → Node.js → Environment Variables |
+| Loglar | Plesk → Node.js → View Logs |
+| Veritabanı yedek | Plesk → Databases → Backup Manager |
 | SSL yenile | Plesk → Let's Encrypt → Renew |
-| Env değişkenleri | Plesk → Node.js → Environment Variables |

@@ -444,6 +444,23 @@ mevcut.
 
 **Faz 15 kabul:** ✅ Vitest: 93/93, ESLint: 0 hata, TypeScript: temiz, Build: 41 route, 0 hata. (2026-11-15)
 
+## Plesk SSH'siz deployment
+
+-   [x] `server.js` — startup'ta otomatik `prisma migrate deploy`, PORT env, platform-aware binary path.
+    > CJS (require) syntax, `isWin` ile Windows/Linux binary path. ESLint ignore'a alındı.
+-   [x] `src/app/setup/page.tsx` — İlk kurulum sihirbazı (super_admin yoksa aktif, varsa /admin/login'e yönlendirir).
+    > `export const instant = false`. DB hatasında form yine gösterilir.
+-   [x] `src/app/setup/actions.ts` — setupAction: userRole_ junction, siteSetting.valueJson, hashPassword, auditLog.
+    > `userRole_` (schema model adı), `valueJson` (SiteSetting JSON alanı). Zod v4 (`from "zod/v4"`).
+-   [x] `src/app/setup/setup-form.tsx` — Client form, mavi tema (`#101F33`, `#1769AA`).
+    > `useActionState(setupAction, undefined)`. Alanlar: siteName, adminName, adminEmail, password, confirm.
+-   [x] `DEPLOYMENT_PLESK.md` — SSH'sız rehber (Git Extension + FTP yöntemleri, /setup sayfası ile ilk kurulum).
+    > Yöntem A: GitHub push → Plesk Git Extension pull + build. Yöntem B: FTP zip upload.
+-   [x] Lint, typecheck, test ve build.
+    > ESLint: ✅ 0 hata | TypeScript: ✅ temiz | Vitest: ✅ 93/93 | Build: ✅ 42 route (/setup dahil), 0 hata.
+
+**Plesk deployment kabul:** ✅ Vitest: 93/93, ESLint: 0 hata, TypeScript: temiz, Build: 42 route, 0 hata. (2026-11-15)
+
 ## Her görevden sonra zorunlu kapanış
 
 -   [ ] İlgili görev(ler) doğru durumla güncellendi.
