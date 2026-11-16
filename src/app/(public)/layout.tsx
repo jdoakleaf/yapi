@@ -1,4 +1,6 @@
 
+export const dynamic = "force-dynamic";
+
 import { getPublicSiteSettings, getSetting } from "@/lib/settings/site-data";
 import { AnnouncementBar } from "@/components/public/announcement-bar";
 import { SiteHeader } from "@/components/public/site-header";

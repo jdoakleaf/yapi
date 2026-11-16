@@ -1,4 +1,5 @@
 // Admin sayfaları DB/session erişimi içerir — prerender yapılmaz
+export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
