@@ -58,6 +58,63 @@ function runMigrations() {
 runMigrations();
 
 // ---------------------------------------------------------------------------
+// Adim 2: Standalone icin Prisma engine'i ayarla
+// Windows'ta build edilen standalone'da Windows Prisma binary var.
+// Linux'ta calistirinca dogru binary bulunamaz → DB sessizce bozulur.
+// Ana node_modules'daki Linux binary'yi bulup PRISMA_QUERY_ENGINE_LIBRARY
+// olarak set ediyoruz — standalone server bunu kullanir.
+// ---------------------------------------------------------------------------
+
+function setupPrismaEngine() {
+  // Zaten set edilmisse atla
+  if (process.env.PRISMA_QUERY_ENGINE_LIBRARY) {
+    console.log(
+      "> [prisma] Engine already set:",
+      process.env.PRISMA_QUERY_ENGINE_LIBRARY
+    );
+    return;
+  }
+
+  function findEngine(dir, depth) {
+    if (depth > 5) return null;
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (
+          !entry.isDirectory() &&
+          entry.name.startsWith("libquery_engine") &&
+          entry.name.endsWith(".node")
+        ) {
+          return fullPath;
+        }
+        if (entry.isDirectory() && !entry.name.startsWith(".pnpm-store")) {
+          const found = findEngine(fullPath, depth + 1);
+          if (found) return found;
+        }
+      }
+    } catch {}
+    return null;
+  }
+
+  const enginePath = findEngine(
+    path.join(__dirname, "node_modules"),
+    0
+  );
+
+  if (enginePath) {
+    process.env.PRISMA_QUERY_ENGINE_LIBRARY = enginePath;
+    console.log("> [prisma] Linux engine bulundu:", enginePath);
+  } else {
+    console.warn(
+      "> [prisma] Uyari: libquery_engine.node bulunamadi — DB calismayabilir."
+    );
+  }
+}
+
+setupPrismaEngine();
+
+// ---------------------------------------------------------------------------
 // Adim 2: Standalone icin statik dosyalari hazirla
 // next build standalone modda .next/static ve public/ klasorlerini
 // .next/standalone/ icine KOPYALAMAZ — bunu biz yapiyoruz.
