@@ -45,8 +45,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
   // Standalone output: Plesk deployment icin gerekli.
   // SWC binary olmadan calisir (eski GLIBC sunucular icin).
   // Prisma RHEL binary schema.prisma binaryTargets ile dahil edilir.
