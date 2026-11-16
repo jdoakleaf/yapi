@@ -75,7 +75,7 @@ function runMigrations() {
 runMigrations();
 
 // ---------------------------------------------------------------------------
-// Adim 2: Standalone icin static ve public dosyalari kopyala (yoksa)
+// Adim 2: Standalone icin static ve public dosyalari kopyala
 // ---------------------------------------------------------------------------
 
 function copyDirIfMissing(src, dst) {
@@ -106,7 +106,7 @@ copyDirIfMissing(
 );
 
 // ---------------------------------------------------------------------------
-// Adim 3: Prisma modullerini ve RHEL binary'yi standalone node_modules'a aktar
+// Adim 3: Prisma modullerini standalone node_modules'a saglam sekilde aktar
 // ---------------------------------------------------------------------------
 
 function setupPrismaModules() {
@@ -117,29 +117,60 @@ function setupPrismaModules() {
     } catch (e) {}
   }
 
-  // Root node_modules'daki @prisma ve .prisma'yı standalone içine kopyala
-  for (const mod of ["@prisma", ".prisma"]) {
-    const src = path.join(__dirname, "node_modules", mod);
-    const dst = path.join(standaloneNodeModules, mod);
+  // 1. @prisma
+  const prismaSources = [
+    path.join(__dirname, "node_modules", "@prisma"),
+    path.join(
+      __dirname,
+      "node_modules",
+      ".pnpm",
+      "@prisma+client@5.22.0_prisma@5.22.0",
+      "node_modules",
+      "@prisma"
+    ),
+  ];
+  for (const src of prismaSources) {
     if (fs.existsSync(src)) {
-      try {
-        fs.cpSync(src, dst, { recursive: true, dereference: true });
-        console.log(`> [prisma] ${mod} standalone/node_modules icine aktarildi.`);
-      } catch (err) {
-        console.warn(`> [prisma] ${mod} kopyalama uyarisi:`, err.message);
+      const dst = path.join(standaloneNodeModules, "@prisma");
+      if (!fs.existsSync(dst)) {
+        try {
+          fs.cpSync(src, dst, { recursive: true, dereference: true });
+          console.log("> [prisma] @prisma kopyalandi.");
+        } catch (e) {}
       }
+      break;
     }
   }
 
-  // RHEL binary yolunu bul ve PRISMA_QUERY_ENGINE_LIBRARY olarak ayarla
-  const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
-  const sourceCandidates = [
+  // 2. .prisma
+  const dotPrismaSources = [
     path.join(
-      standaloneNodeModules,
-      ".prisma",
-      "client",
-      rhelBinary
+      __dirname,
+      "node_modules",
+      ".pnpm",
+      "@prisma+client@5.22.0_prisma@5.22.0",
+      "node_modules",
+      ".prisma"
     ),
+    path.join(__dirname, "node_modules", ".prisma"),
+  ];
+  for (const src of dotPrismaSources) {
+    if (fs.existsSync(src)) {
+      const dst = path.join(standaloneNodeModules, ".prisma");
+      if (!fs.existsSync(dst)) {
+        try {
+          fs.cpSync(src, dst, { recursive: true, dereference: true });
+          console.log("> [prisma] .prisma kopyalandi.");
+        } catch (e) {}
+      }
+      break;
+    }
+  }
+
+  // 3. RHEL binary yolunu PRISMA_QUERY_ENGINE_LIBRARY olarak ayarla
+  const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
+  const binaryCandidates = [
+    path.join(standaloneNodeModules, ".prisma", "client", rhelBinary),
     path.join(
       __dirname,
       "node_modules",
@@ -150,13 +181,11 @@ function setupPrismaModules() {
       "client",
       rhelBinary
     ),
-    path.join(__dirname, "node_modules", ".prisma", "client", rhelBinary),
   ];
-
-  for (const candidate of sourceCandidates) {
-    if (fs.existsSync(candidate)) {
-      process.env.PRISMA_QUERY_ENGINE_LIBRARY = candidate;
-      console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", candidate);
+  for (const c of binaryCandidates) {
+    if (fs.existsSync(c)) {
+      process.env.PRISMA_QUERY_ENGINE_LIBRARY = c;
+      console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", c);
       break;
     }
   }
