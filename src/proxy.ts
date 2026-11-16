@@ -42,6 +42,7 @@ export default async function proxy(request: NextRequest) {
     const checkUrl = `${baseUrl}/api/redirect-check?path=${encodeURIComponent(pathname)}`;
     const res = await fetch(checkUrl, {
       headers: { "x-middleware-redirect-check": "1" },
+      signal: AbortSignal.timeout(2000), // 2 saniye timeout — takilirsa devam et
     });
 
     if (res.ok) {
