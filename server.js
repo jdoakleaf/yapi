@@ -5,13 +5,45 @@
 //
 // next.config.ts → output:"standalone" kullanilir.
 // SWC binary gerekmez; pre-compiled standalone server calistirilir.
-// Prisma RHEL binary: sunucunun node_modules'indan standalone'a kopyalanir.
 
 "use strict";
 
 const path = require("path");
 const fs = require("fs");
 const { execSync } = require("child_process");
+
+// ---------------------------------------------------------------------------
+// Adim 0: .env dosyasini yukle (Plesk env var'lari yoksa fallback)
+// ---------------------------------------------------------------------------
+
+function loadEnvFile() {
+  const envPath = path.join(__dirname, ".env");
+  if (!fs.existsSync(envPath)) {
+    console.warn("> [env] .env dosyasi bulunamadi, Plesk env kullanilacak.");
+    return;
+  }
+  try {
+    const content = fs.readFileSync(envPath, "utf8");
+    let loaded = 0;
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const idx = trimmed.indexOf("=");
+      if (idx === -1) continue;
+      const key = trimmed.substring(0, idx).trim();
+      const value = trimmed.substring(idx + 1).trim();
+      if (!process.env[key]) {
+        process.env[key] = value;
+        loaded++;
+      }
+    }
+    console.log(`> [env] .env yuklendi (${loaded} degisken).`);
+  } catch (err) {
+    console.warn("> [env] .env okunamadi:", err.message);
+  }
+}
+
+loadEnvFile();
 
 // ---------------------------------------------------------------------------
 // Adim 1: Veritabani migration
@@ -74,13 +106,12 @@ copyDirIfMissing(
 );
 
 // ---------------------------------------------------------------------------
-// Adim 3: Prisma RHEL binary'yi standalone'a kopyala (sunucuda)
+// Adim 3: Prisma RHEL binary ayarla
 // ---------------------------------------------------------------------------
 
 function setupPrismaEngine() {
   const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
 
-  // Kaynak: sunucunun pnpm node_modules'indaki RHEL binary
   const sourceCandidates = [
     path.join(
       __dirname,
@@ -92,13 +123,7 @@ function setupPrismaEngine() {
       "client",
       rhelBinary
     ),
-    path.join(
-      __dirname,
-      "node_modules",
-      ".prisma",
-      "client",
-      rhelBinary
-    ),
+    path.join(__dirname, "node_modules", ".prisma", "client", rhelBinary),
   ];
 
   let sourcePath = null;
@@ -110,11 +135,15 @@ function setupPrismaEngine() {
   }
 
   if (!sourcePath) {
-    console.warn("> [prisma] RHEL binary node_modules'da bulunamadi — DB calismayabilir.");
+    console.warn("> [prisma] RHEL binary bulunamadi — DB calismayabilir.");
     return;
   }
 
-  // Hedef: standalone icindeki .prisma/client klasoru
+  // PRISMA_QUERY_ENGINE_LIBRARY env'ini set et
+  process.env.PRISMA_QUERY_ENGINE_LIBRARY = sourcePath;
+  console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", sourcePath);
+
+  // Standalone .prisma/client dizinine kopyala (varsa)
   const targetCandidates = [
     path.join(
       standaloneDir,
@@ -142,12 +171,6 @@ function setupPrismaEngine() {
         console.log("> [prisma] RHEL binary zaten mevcut:", targetPath);
       }
     }
-  }
-
-  // Ayrica PRISMA_QUERY_ENGINE_LIBRARY env'ini set et (ek guvenlik)
-  if (!process.env.PRISMA_QUERY_ENGINE_LIBRARY) {
-    process.env.PRISMA_QUERY_ENGINE_LIBRARY = sourcePath;
-    console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", sourcePath);
   }
 }
 
