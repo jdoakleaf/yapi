@@ -58,6 +58,22 @@ function loadEnvFile() {
 
 loadEnvFile();
 
+// AUTH_SECRET ve NEXTAUTH_SECRET esitleme
+if (process.env.AUTH_SECRET && !process.env.NEXTAUTH_SECRET) {
+  process.env.NEXTAUTH_SECRET = process.env.AUTH_SECRET;
+}
+if (process.env.NEXTAUTH_SECRET && !process.env.AUTH_SECRET) {
+  process.env.AUTH_SECRET = process.env.NEXTAUTH_SECRET;
+}
+if (!process.env.AUTH_SECRET && !process.env.NEXTAUTH_SECRET) {
+  console.warn("> [auth] UYARI: AUTH_SECRET veya NEXTAUTH_SECRET tanimli degil! Fallback ataniyor.");
+  process.env.AUTH_SECRET = "lagan-auth-secret-key-32-chars-minimum-fallback";
+  process.env.NEXTAUTH_SECRET = process.env.AUTH_SECRET;
+}
+if (!process.env.NEXTAUTH_URL && process.env.NEXT_PUBLIC_APP_URL) {
+  process.env.NEXTAUTH_URL = process.env.NEXT_PUBLIC_APP_URL;
+}
+
 // ---------------------------------------------------------------------------
 // Adim 1: Veritabani migration
 // ---------------------------------------------------------------------------

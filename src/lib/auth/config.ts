@@ -38,9 +38,11 @@ export const authConfig: NextAuthConfig = {
           return null;
         }
 
+        const email = credentials.email.toLowerCase().trim();
+
         // Kullanıcıyı ve rollerini getir
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email },
           include: {
             userRoles: {
               include: { role: true },
@@ -112,6 +114,6 @@ export const authConfig: NextAuthConfig = {
       return true;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   trustHost: true,
 };
