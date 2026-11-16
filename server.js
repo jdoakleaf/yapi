@@ -5,10 +5,16 @@
 //
 // next.config.ts → output: "standalone" ile build edildigi icin
 // .next/standalone/server.js kullanilir (custom next() server DEGIL).
+//
+// Standalone server statik dosyalari kendi dizininde arar:
+//   .next/standalone/.next/static/   → CSS/JS bundle'lari
+//   .next/standalone/public/         → public/ klasoru
+// Bu dosyalar build sirasinda otomatik kopyalanmaz; bu script yapar.
 
 "use strict";
 
 const path = require("path");
+const fs = require("fs");
 const { execSync } = require("child_process");
 
 // ---------------------------------------------------------------------------
@@ -50,6 +56,35 @@ function runMigrations() {
 }
 
 runMigrations();
+
+// ---------------------------------------------------------------------------
+// Adim 2: Standalone icin statik dosyalari hazirla
+// next build standalone modda .next/static ve public/ klasorlerini
+// .next/standalone/ icine KOPYALAMAZ — bunu biz yapiyoruz.
+// ---------------------------------------------------------------------------
+
+function copyDirIfMissing(src, dst) {
+  if (!fs.existsSync(src)) return;
+  if (fs.existsSync(dst)) return; // zaten var, atlaniyor
+  try {
+    fs.cpSync(src, dst, { recursive: true });
+    console.log(`> [setup] Kopyalandi: ${path.basename(src)} → standalone/`);
+  } catch (err) {
+    console.warn(`> [setup] Kopyalama hatasi (${src}):`, err.message);
+  }
+}
+
+const standaloneDir = path.join(__dirname, ".next", "standalone");
+// .next/static → .next/standalone/.next/static
+copyDirIfMissing(
+  path.join(__dirname, ".next", "static"),
+  path.join(standaloneDir, ".next", "static")
+);
+// public → .next/standalone/public
+copyDirIfMissing(
+  path.join(__dirname, "public"),
+  path.join(standaloneDir, "public")
+);
 
 // ---------------------------------------------------------------------------
 // Adim 2: Standalone Next.js server'i baslat
