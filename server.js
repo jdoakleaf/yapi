@@ -3,29 +3,28 @@
 // Plesk → Node.js panelinde "Application startup file" olarak tanimlanir.
 // PORT ortam degiskenini Plesk otomatik atar.
 //
-// next.config.ts → output: "standalone" ile build edildigi icin
-// .next/standalone/server.js kullanilir (custom next() server DEGIL).
-//
-// Standalone server statik dosyalari kendi dizininde arar:
-//   .next/standalone/.next/static/   → CSS/JS bundle'lari
-//   .next/standalone/public/         → public/ klasoru
-// Bu dosyalar build sirasinda otomatik kopyalanmaz; bu script yapar.
+// next.config.ts → output:"standalone" KALDIRILDI.
+// Ana node_modules kullanilir (sunucuda pnpm install ile Linux binary kuruldu).
 
 "use strict";
 
+const { createServer } = require("http");
+const { parse } = require("url");
 const path = require("path");
-const fs = require("fs");
 const { execSync } = require("child_process");
+const next = require("next");
+
+const dev = process.env.NODE_ENV !== "production";
+const hostname = process.env.HOSTNAME || "0.0.0.0";
+const port = parseInt(process.env.PORT || "3000", 10);
 
 // ---------------------------------------------------------------------------
-// Adim 1: Veritabani migration (server baslamadan once)
+// Adim 1: Veritabani migration
 // ---------------------------------------------------------------------------
 
 function runMigrations() {
   if (!process.env.DATABASE_URL) {
-    console.warn(
-      "> [migration] DATABASE_URL bulunamadi — migration atlandi."
-    );
+    console.warn("> [migration] DATABASE_URL bulunamadi — atlandi.");
     return;
   }
 
@@ -47,115 +46,39 @@ function runMigrations() {
     });
     console.log("> [migration] Migration tamamlandi.");
   } catch (err) {
-    console.error(
-      "> [migration] Uyari: Migration sirasinda hata olustu:",
-      err.message
-    );
-    console.error("> [migration] Uygulama baslatmaya devam ediliyor...");
+    console.error("> [migration] Uyari:", err.message);
+    console.error("> [migration] Devam ediliyor...");
   }
 }
 
 runMigrations();
 
 // ---------------------------------------------------------------------------
-// Adim 2: Standalone icin Prisma engine'i ayarla
-// Windows'ta build edilen standalone'da Windows Prisma binary var.
-// Linux'ta calistirinca dogru binary bulunamaz → DB sessizce bozulur.
-// Ana node_modules'daki Linux binary'yi bulup PRISMA_QUERY_ENGINE_LIBRARY
-// olarak set ediyoruz — standalone server bunu kullanir.
+// Adim 2: Next.js custom server (standalone DEGIL)
+// Ana node_modules kullanilir → Linux Prisma binary otomatik bulunur.
 // ---------------------------------------------------------------------------
 
-function setupPrismaEngine() {
-  // Zaten set edilmisse atla
-  if (process.env.PRISMA_QUERY_ENGINE_LIBRARY) {
-    console.log(
-      "> [prisma] Engine already set:",
-      process.env.PRISMA_QUERY_ENGINE_LIBRARY
-    );
-    return;
-  }
+const app = next({ dev, hostname, port });
+const handle = app.getRequestHandler();
 
-  function findEngine(dir, depth) {
-    if (depth > 5) return null;
+app.prepare().then(() => {
+  createServer(async (req, res) => {
     try {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (
-          !entry.isDirectory() &&
-          entry.name.startsWith("libquery_engine") &&
-          entry.name.endsWith(".node")
-        ) {
-          return fullPath;
-        }
-        if (entry.isDirectory() && !entry.name.startsWith(".pnpm-store")) {
-          const found = findEngine(fullPath, depth + 1);
-          if (found) return found;
-        }
-      }
-    } catch {}
-    return null;
-  }
-
-  const enginePath = findEngine(
-    path.join(__dirname, "node_modules"),
-    0
-  );
-
-  if (enginePath) {
-    process.env.PRISMA_QUERY_ENGINE_LIBRARY = enginePath;
-    console.log("> [prisma] Linux engine bulundu:", enginePath);
-  } else {
-    console.warn(
-      "> [prisma] Uyari: libquery_engine.node bulunamadi — DB calismayabilir."
-    );
-  }
-}
-
-setupPrismaEngine();
-
-// ---------------------------------------------------------------------------
-// Adim 2: Standalone icin statik dosyalari hazirla
-// next build standalone modda .next/static ve public/ klasorlerini
-// .next/standalone/ icine KOPYALAMAZ — bunu biz yapiyoruz.
-// ---------------------------------------------------------------------------
-
-function copyDirIfMissing(src, dst) {
-  if (!fs.existsSync(src)) return;
-  if (fs.existsSync(dst)) return; // zaten var, atlaniyor
-  try {
-    fs.cpSync(src, dst, { recursive: true });
-    console.log(`> [setup] Kopyalandi: ${path.basename(src)} → standalone/`);
-  } catch (err) {
-    console.warn(`> [setup] Kopyalama hatasi (${src}):`, err.message);
-  }
-}
-
-const standaloneDir = path.join(__dirname, ".next", "standalone");
-// .next/static → .next/standalone/.next/static
-copyDirIfMissing(
-  path.join(__dirname, ".next", "static"),
-  path.join(standaloneDir, ".next", "static")
-);
-// public → .next/standalone/public
-copyDirIfMissing(
-  path.join(__dirname, "public"),
-  path.join(standaloneDir, "public")
-);
-
-// ---------------------------------------------------------------------------
-// Adim 2: Standalone Next.js server'i baslat
-// output: "standalone" ile build yapildiginda .next/standalone/server.js
-// tum bagimliliklari icerir ve dogrudan node ile calistirilir.
-// ---------------------------------------------------------------------------
-
-// Standalone server HOST/PORT/HOSTNAME env var'larindan okur
-// Plesk zaten PORT'u set eder; biz sadece yonlendiriyoruz.
-process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
-process.env.PORT = process.env.PORT || "3000";
-
-console.log(
-  `> Standalone server baslatiliyor: PORT=${process.env.PORT} ENV=${process.env.NODE_ENV}`
-);
-
-require(path.join(__dirname, ".next", "standalone", "server.js"));
+      const parsedUrl = parse(req.url, true);
+      await handle(req, res, parsedUrl);
+    } catch (err) {
+      console.error("Hata:", req.url, err);
+      res.statusCode = 500;
+      res.end("Sunucu hatasi");
+    }
+  })
+    .once("error", (err) => {
+      console.error(err);
+      process.exit(1);
+    })
+    .listen(port, () => {
+      console.log(
+        `> Yapi Platform hazir: http://${hostname}:${port} [${process.env.NODE_ENV}]`
+      );
+    });
+});

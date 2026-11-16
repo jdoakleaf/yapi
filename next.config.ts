@@ -47,10 +47,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
-  // Plesk / VPS deployment için standalone output.
-  // "pnpm build" sonrası .next/standalone/ dizini tüm bağımlılıkları içerir.
-  // Plesk'te "node server.js" ile başlatılır.
-  output: "standalone",
+  // NOT: output:"standalone" kaldirildi — Plesk custom server ile uyumsuz.
+  // Sunucudaki ana node_modules kullanilir (Linux Prisma binary dahil).
   turbopack: {
     rules: {
       "*.css": {
