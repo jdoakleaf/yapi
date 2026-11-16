@@ -5,7 +5,7 @@
 //
 // next.config.ts → output:"standalone" kullanilir.
 // SWC binary gerekmez; pre-compiled standalone server calistirilir.
-// Prisma RHEL binary schema.prisma binaryTargets ile dahil edilmistir.
+// Prisma RHEL binary: sunucunun node_modules'indan standalone'a kopyalanir.
 
 "use strict";
 
@@ -23,12 +23,7 @@ function runMigrations() {
     return;
   }
 
-  const prismaBin = path.join(
-    __dirname,
-    "node_modules",
-    ".bin",
-    "prisma"
-  );
+  const prismaBin = path.join(__dirname, "node_modules", ".bin", "prisma");
 
   try {
     console.log("> [migration] Veritabani migration basliyor...");
@@ -57,7 +52,7 @@ function copyDirIfMissing(src, dst) {
     return;
   }
   if (fs.existsSync(dst)) {
-    return; // Zaten kopyalanmis
+    return;
   }
   try {
     fs.cpSync(src, dst, { recursive: true });
@@ -79,7 +74,87 @@ copyDirIfMissing(
 );
 
 // ---------------------------------------------------------------------------
-// Adim 3: Standalone server.js'i calistir
+// Adim 3: Prisma RHEL binary'yi standalone'a kopyala (sunucuda)
+// ---------------------------------------------------------------------------
+
+function setupPrismaEngine() {
+  const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
+
+  // Kaynak: sunucunun pnpm node_modules'indaki RHEL binary
+  const sourceCandidates = [
+    path.join(
+      __dirname,
+      "node_modules",
+      ".pnpm",
+      "@prisma+client@5.22.0_prisma@5.22.0",
+      "node_modules",
+      ".prisma",
+      "client",
+      rhelBinary
+    ),
+    path.join(
+      __dirname,
+      "node_modules",
+      ".prisma",
+      "client",
+      rhelBinary
+    ),
+  ];
+
+  let sourcePath = null;
+  for (const candidate of sourceCandidates) {
+    if (fs.existsSync(candidate)) {
+      sourcePath = candidate;
+      break;
+    }
+  }
+
+  if (!sourcePath) {
+    console.warn("> [prisma] RHEL binary node_modules'da bulunamadi — DB calismayabilir.");
+    return;
+  }
+
+  // Hedef: standalone icindeki .prisma/client klasoru
+  const targetCandidates = [
+    path.join(
+      standaloneDir,
+      "node_modules",
+      ".pnpm",
+      "@prisma+client@5.22.0_prisma@5.22.0",
+      "node_modules",
+      ".prisma",
+      "client"
+    ),
+    path.join(standaloneDir, "node_modules", ".prisma", "client"),
+  ];
+
+  for (const targetDir of targetCandidates) {
+    if (fs.existsSync(targetDir)) {
+      const targetPath = path.join(targetDir, rhelBinary);
+      if (!fs.existsSync(targetPath)) {
+        try {
+          fs.copyFileSync(sourcePath, targetPath);
+          console.log("> [prisma] RHEL binary kopyalandi:", targetPath);
+        } catch (err) {
+          console.warn("> [prisma] Binary kopyalama hatasi:", err.message);
+        }
+      } else {
+        console.log("> [prisma] RHEL binary zaten mevcut:", targetPath);
+      }
+    }
+  }
+
+  // Ayrica PRISMA_QUERY_ENGINE_LIBRARY env'ini set et (ek guvenlik)
+  if (!process.env.PRISMA_QUERY_ENGINE_LIBRARY) {
+    process.env.PRISMA_QUERY_ENGINE_LIBRARY = sourcePath;
+    console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", sourcePath);
+  }
+}
+
+setupPrismaEngine();
+
+// ---------------------------------------------------------------------------
+// Adim 4: Standalone server.js'i calistir
 // ---------------------------------------------------------------------------
 
 process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
