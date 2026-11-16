@@ -8,9 +8,22 @@
 
 "use strict";
 
+const Module = require("module");
 const path = require("path");
 const fs = require("fs");
 const { execSync } = require("child_process");
+
+// ---------------------------------------------------------------------------
+// Adim -1: Turbopack hashed external modules fix (@prisma/client-xxxx -> @prisma/client)
+// ---------------------------------------------------------------------------
+
+const originalResolveFilename = Module._resolveFilename;
+Module._resolveFilename = function (request, parent, isMain, options) {
+  if (typeof request === "string" && request.startsWith("@prisma/client-")) {
+    request = "@prisma/client";
+  }
+  return originalResolveFilename.call(this, request, parent, isMain, options);
+};
 
 // ---------------------------------------------------------------------------
 // Adim 0: .env dosyasini yukle (Plesk env var'lari yoksa fallback)
@@ -167,7 +180,18 @@ function setupPrismaModules() {
     }
   }
 
-  // 3. RHEL binary yolunu PRISMA_QUERY_ENGINE_LIBRARY olarak ayarla
+  // 3. Turbopack hash alias (@prisma/client-dcc063df019991b5)
+  const prismaScope = path.join(standaloneNodeModules, "@prisma");
+  const normalClient = path.join(prismaScope, "client");
+  const hashedClient = path.join(prismaScope, "client-dcc063df019991b5");
+  if (fs.existsSync(normalClient) && !fs.existsSync(hashedClient)) {
+    try {
+      fs.cpSync(normalClient, hashedClient, { recursive: true, dereference: true });
+      console.log("> [prisma] Hashed client alias olusturuldu.");
+    } catch (e) {}
+  }
+
+  // 4. RHEL binary yolunu PRISMA_QUERY_ENGINE_LIBRARY olarak ayarla
   const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
   const binaryCandidates = [
     path.join(standaloneNodeModules, ".prisma", "client", rhelBinary),
