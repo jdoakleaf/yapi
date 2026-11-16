@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -101,7 +101,7 @@ model Role {
   id          String  @id @default(uuid())
   name        String
   key         String  @unique
-  description String?
+  description String? @db.Text
 
   userRoles       UserRole_[]
   rolePermissions RolePermission[]
@@ -112,7 +112,7 @@ model Role {
 model Permission {
   id          String  @id @default(uuid())
   key         String  @unique
-  description String?
+  description String? @db.Text
 
   rolePermissions RolePermission[]
 
@@ -199,7 +199,7 @@ model Page {
   id           String        @id @default(uuid())
   title        String
   slug         String        @unique
-  excerpt      String?
+  excerpt      String?       @db.Text
   status       ContentStatus @default(DRAFT)
   templateKey  String?       @map("template_key")
   seoTitle     String?       @map("seo_title")
@@ -268,8 +268,8 @@ model Service {
   categoryId       String        @map("category_id")
   title            String
   slug             String        @unique
-  shortDescription String?       @map("short_description")
-  content          String?
+  shortDescription String?       @db.Text @map("short_description")
+  content          String?       @db.Text
   cardMediaId      String?       @map("card_media_id")
   coverMediaId     String?       @map("cover_media_id")
   status           ContentStatus @default(DRAFT)
@@ -307,8 +307,8 @@ model Project {
   id             String        @id @default(uuid())
   title          String
   slug           String        @unique
-  summary        String?
-  description    String?
+  summary        String?       @db.Text
+  description    String?       @db.Text
   locationLabel  String?       @map("location_label")
   projectType    String?       @map("project_type")
   completionDate DateTime?     @map("completion_date")
@@ -369,7 +369,7 @@ model BlogPost {
   id           String        @id @default(uuid())
   title        String
   slug         String        @unique
-  excerpt      String?
+  excerpt      String?       @db.Text
   content      String?
   coverMediaId String?       @map("cover_media_id")
   authorId     String?       @map("author_id")
@@ -396,7 +396,7 @@ model Testimonial {
   id                String   @id @default(uuid())
   displayName       String   @map("display_name")
   companyOrLocation String?  @map("company_or_location")
-  quote             String
+  quote             String   @db.Text
   rating            Int?
   mediaId           String?  @map("media_id")
   isPublished       Boolean  @default(false) @map("is_published")
@@ -416,8 +416,8 @@ model Testimonial {
 
 model FAQ {
   id          String   @id @default(uuid())
-  question    String
-  answer      String
+  question    String   @db.Text
+  answer      String   @db.Text
   serviceId   String?  @map("service_id")
   sortOrder   Int      @default(0) @map("sort_order")
   isPublished Boolean  @default(false) @map("is_published")
@@ -507,7 +507,7 @@ model Lead {
   workModel            WorkModel    @map("work_model")
   city                 String
   district             String?
-  message              String?
+  message              String?      @db.Text
   status               LeadStatus   @default(NEW)
   assignedTo           String?      @map("assigned_to")
   privacyNoticeVersion String?      @map("privacy_notice_version")
@@ -541,7 +541,7 @@ model LeadNote {
   id        String   @id @default(uuid())
   leadId    String   @map("lead_id")
   userId    String   @map("user_id")
-  note      String
+  note      String   @db.Text
   createdAt DateTime @default(now()) @map("created_at")
 
   lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
@@ -574,7 +574,7 @@ model AuditLog {
   action       String
   entityType   String   @map("entity_type")
   entityId     String?  @map("entity_id")
-  summary      String?
+  summary      String?  @db.Text
   metadataJson Json?    @map("metadata_json")
   ipHash       String?  @map("ip_hash")
   createdAt    DateTime @default(now()) @map("created_at")
