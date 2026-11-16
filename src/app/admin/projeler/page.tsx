@@ -5,7 +5,6 @@ import { Plus, Pencil } from "lucide-react";
 import { ProjectDeleteButton } from "./delete-button";
 import { ProjectFeaturedButton } from "./featured-button";
 
-export const instant = false;
 
 interface Props {
   searchParams: Promise<{ page?: string; status?: string }>;

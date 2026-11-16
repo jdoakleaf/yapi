@@ -1,5 +1,4 @@
 // DB erişimi nedeniyle prerender engellenir; dinamik olarak render et
-export const instant = false;
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";

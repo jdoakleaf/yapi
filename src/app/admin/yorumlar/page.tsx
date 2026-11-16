@@ -1,7 +1,6 @@
 import { getTestimonials } from "@/lib/cms/content-actions";
 import { TestimonialList } from "./testimonial-list";
 
-export const instant = false;
 
 export default async function YorumlarPage() {
   const testimonials = await getTestimonials();

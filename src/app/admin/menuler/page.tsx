@@ -1,7 +1,6 @@
 import { getMenus } from "@/lib/cms/content-actions";
 import { MenuManager } from "./menu-manager";
 
-export const instant = false;
 
 export default async function MenulerPage() {
   const menus = await getMenus();

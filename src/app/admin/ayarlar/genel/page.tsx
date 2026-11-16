@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { getSiteSettings } from "@/lib/settings/actions";
 import { SiteSettingsForm } from "./form";

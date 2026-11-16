@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Plus, Pencil } from "lucide-react";
 import { BlogDeleteButton } from "./delete-button";
 
-export const instant = false;
 
 interface Props {
   searchParams: Promise<{ page?: string; status?: string }>;

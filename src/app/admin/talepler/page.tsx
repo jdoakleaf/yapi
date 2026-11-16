@@ -1,4 +1,3 @@
-export const instant = false;
 
 import Link from "next/link";
 import { getLeads } from "@/lib/leads/lead-actions";

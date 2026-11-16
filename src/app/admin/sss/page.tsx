@@ -1,7 +1,6 @@
 import { getFAQs } from "@/lib/cms/content-actions";
 import { FAQList } from "./faq-list";
 
-export const instant = false;
 
 export default async function SSSPage() {
   const { getServices } = await import("@/lib/cms/service-actions");

@@ -1,5 +1,4 @@
 // Admin sayfaları DB/session erişimi içerir — prerender yapılmaz
-export const instant = false;
 
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";

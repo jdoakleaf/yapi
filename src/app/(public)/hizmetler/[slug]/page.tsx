@@ -14,7 +14,6 @@ function mediaUrl(storageKey: string) {
   return `${BASE_URL}/${storageKey}`;
 }
 
-export const instant = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

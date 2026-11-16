@@ -5,7 +5,6 @@ import { ProjectForm } from "../project-form";
 import { GalleryManager } from "./gallery-manager";
 import { ServiceLinker } from "./service-linker";
 
-export const instant = false;
 
 interface Props {
   params: Promise<{ id: string }>;

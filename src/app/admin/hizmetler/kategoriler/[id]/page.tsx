@@ -2,7 +2,6 @@ import { getServiceCategory } from "@/lib/cms/service-actions";
 import { CategoryForm } from "../category-form";
 import { notFound } from "next/navigation";
 
-export const instant = false;
 
 interface Props {
   params: Promise<{ id: string }>;

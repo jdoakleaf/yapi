@@ -7,7 +7,6 @@ import { ServiceFeaturedButton } from "./featured-button";
 import { ServiceStatusBadge } from "./status-badge";
 import type { ContentStatus } from "@prisma/client";
 
-export const instant = false;
 
 interface Props {
   searchParams: Promise<{ page?: string; categoryId?: string; status?: string }>;

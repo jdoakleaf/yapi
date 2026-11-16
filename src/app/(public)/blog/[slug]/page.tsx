@@ -7,7 +7,6 @@ import { ArticleSchema, BreadcrumbSchema } from "@/components/seo/json-ld";
 interface Props { params: Promise<{ slug: string }> }
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-export const instant = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

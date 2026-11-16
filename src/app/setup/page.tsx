@@ -11,7 +11,6 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import SetupForm from "./setup-form";
 
-export const instant = false;
 
 export const metadata = {
   title: "İlk Kurulum",

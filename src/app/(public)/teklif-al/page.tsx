@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { prisma } from "@/lib/db";
 import { ContentStatus } from "@prisma/client";

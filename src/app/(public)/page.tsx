@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { getPublicSiteSettings, getSetting } from "@/lib/settings/site-data";
 import { HeroSection } from "@/components/public/hero-section";

@@ -1,7 +1,6 @@
 import { getServiceCategories } from "@/lib/cms/service-actions";
 import { ServiceForm } from "../service-form";
 
-export const instant = false;
 
 export default async function YeniHizmetPage() {
   const categories = await getServiceCategories();

@@ -5,7 +5,6 @@ import { Plus, Pencil, Eye, EyeOff } from "lucide-react";
 import { CategoryDeleteButton } from "./delete-button";
 import { CategoryToggleButton } from "./toggle-button";
 
-export const instant = false;
 
 export default async function KategorilerPage() {
   const categories = await getServiceCategories();

@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { getThemeTokens } from "@/lib/settings/theme-actions";
 import { ThemeSettingsForm } from "./form";

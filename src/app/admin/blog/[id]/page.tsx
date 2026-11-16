@@ -2,7 +2,6 @@ import { getBlogPost } from "@/lib/cms/content-actions";
 import { BlogForm } from "../blog-form";
 import { notFound } from "next/navigation";
 
-export const instant = false;
 
 interface Props { params: Promise<{ id: string }> }
 

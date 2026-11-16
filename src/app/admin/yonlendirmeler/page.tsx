@@ -1,4 +1,3 @@
-export const instant = false;
 
 import { getRedirects } from "./redirect-actions";
 import { RedirectManager } from "./redirect-manager";
