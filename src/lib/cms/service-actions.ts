@@ -216,8 +216,8 @@ export async function getServices(params: GetServicesParams = {}) {
   if (typeof params.isFeatured === "boolean") where.isFeatured = params.isFeatured;
   if (params.search) {
     where.OR = [
-      { title: { contains: params.search, mode: "insensitive" } },
-      { shortDescription: { contains: params.search, mode: "insensitive" } },
+      { title: { contains: params.search } },
+      { shortDescription: { contains: params.search } },
     ];
   }
 

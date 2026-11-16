@@ -74,9 +74,9 @@ export async function listMedia(input: ListMediaInput = {}) {
   const where: Prisma.MediaWhereInput = {};
   if (input.search) {
     where.OR = [
-      { originalFilename: { contains: input.search, mode: "insensitive" } },
-      { altText: { contains: input.search, mode: "insensitive" } },
-      { title: { contains: input.search, mode: "insensitive" } },
+      { originalFilename: { contains: input.search } },
+      { altText: { contains: input.search } },
+      { title: { contains: input.search } },
     ];
   }
   if (input.mimeType) {

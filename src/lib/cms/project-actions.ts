@@ -49,9 +49,9 @@ export async function getProjects(params: GetProjectsParams = {}) {
   if (typeof params.isFeatured === "boolean") where.isFeatured = params.isFeatured;
   if (params.search) {
     where.OR = [
-      { title: { contains: params.search, mode: "insensitive" } },
-      { summary: { contains: params.search, mode: "insensitive" } },
-      { locationLabel: { contains: params.search, mode: "insensitive" } },
+      { title: { contains: params.search } },
+      { summary: { contains: params.search } },
+      { locationLabel: { contains: params.search } },
     ];
   }
 

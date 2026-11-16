@@ -36,8 +36,8 @@ export async function getBlogPosts(params: GetBlogPostsParams = {}) {
   if (params.status) where.status = params.status;
   if (params.search) {
     where.OR = [
-      { title: { contains: params.search, mode: "insensitive" } },
-      { excerpt: { contains: params.search, mode: "insensitive" } },
+      { title: { contains: params.search } },
+      { excerpt: { contains: params.search } },
     ];
   }
 
