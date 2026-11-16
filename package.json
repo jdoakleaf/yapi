@@ -72,5 +72,8 @@
     "typescript": "^5",
     "vitest": "^5.1.0"
   },
-  "packageManager": "pnpm@12.18.0"
+  "packageManager": "pnpm@12.18.0",
+  "optionalDependencies": {
+    "@next/swc-wasm-nodejs": "16.4.6"
+  }
 }

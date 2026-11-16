@@ -290,6 +290,10 @@ importers:
       vitest:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@20.19.43)(jsdom@31.0.1)(vite@8.3.8(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+    optionalDependencies:
+      '@next/swc-wasm-nodejs':
+        specifier: 16.4.6
+        version: 16.4.6
 
 packages:
 
@@ -924,6 +928,9 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [musl]
+
+  '@next/swc-wasm-nodejs@16.4.6':
+    resolution: {integrity: sha512-X6is6K2SxLpPriGlD5CHsGGYJpvpoJroP54rxBB0BHxaEJU7aSLZ30ydL6KHRBTv2LLQ+fKYmwdHvKaDug38RQ==}
 
   '@next/swc-win32-arm64-msvc@16.4.6':
     resolution: {integrity: sha512-U0p7/tEtqvHX2crhd841CDwKtp5CFkKXVjOhmfccR3Pvp64sj8KBwRqsvltqLOwVBbj0NtkxwXSDpEHYGbxeXQ==}
@@ -4154,6 +4161,9 @@ snapshots:
     optional: true
 
   '@next/swc-linux-x64-musl@16.4.6':
+    optional: true
+
+  '@next/swc-wasm-nodejs@16.4.6':
     optional: true
 
   '@next/swc-win32-arm64-msvc@16.4.6':
