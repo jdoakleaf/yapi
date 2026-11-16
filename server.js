@@ -75,7 +75,7 @@ function runMigrations() {
 runMigrations();
 
 // ---------------------------------------------------------------------------
-// Adim 2: Standalone icin static dosyalari kopyala (yoksa)
+// Adim 2: Standalone icin static ve public dosyalari kopyala (yoksa)
 // ---------------------------------------------------------------------------
 
 function copyDirIfMissing(src, dst) {
@@ -106,13 +106,40 @@ copyDirIfMissing(
 );
 
 // ---------------------------------------------------------------------------
-// Adim 3: Prisma RHEL binary ayarla
+// Adim 3: Prisma modullerini ve RHEL binary'yi standalone node_modules'a aktar
 // ---------------------------------------------------------------------------
 
-function setupPrismaEngine() {
-  const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
+function setupPrismaModules() {
+  const standaloneNodeModules = path.join(standaloneDir, "node_modules");
+  if (!fs.existsSync(standaloneNodeModules)) {
+    try {
+      fs.mkdirSync(standaloneNodeModules, { recursive: true });
+    } catch (e) {}
+  }
 
+  // Root node_modules'daki @prisma ve .prisma'yı standalone içine kopyala
+  for (const mod of ["@prisma", ".prisma"]) {
+    const src = path.join(__dirname, "node_modules", mod);
+    const dst = path.join(standaloneNodeModules, mod);
+    if (fs.existsSync(src)) {
+      try {
+        fs.cpSync(src, dst, { recursive: true, dereference: true });
+        console.log(`> [prisma] ${mod} standalone/node_modules icine aktarildi.`);
+      } catch (err) {
+        console.warn(`> [prisma] ${mod} kopyalama uyarisi:`, err.message);
+      }
+    }
+  }
+
+  // RHEL binary yolunu bul ve PRISMA_QUERY_ENGINE_LIBRARY olarak ayarla
+  const rhelBinary = "libquery_engine-rhel-openssl-1.1.x.so.node";
   const sourceCandidates = [
+    path.join(
+      standaloneNodeModules,
+      ".prisma",
+      "client",
+      rhelBinary
+    ),
     path.join(
       __dirname,
       "node_modules",
@@ -126,62 +153,22 @@ function setupPrismaEngine() {
     path.join(__dirname, "node_modules", ".prisma", "client", rhelBinary),
   ];
 
-  let sourcePath = null;
   for (const candidate of sourceCandidates) {
     if (fs.existsSync(candidate)) {
-      sourcePath = candidate;
+      process.env.PRISMA_QUERY_ENGINE_LIBRARY = candidate;
+      console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", candidate);
       break;
-    }
-  }
-
-  if (!sourcePath) {
-    console.warn("> [prisma] RHEL binary bulunamadi — DB calismayabilir.");
-    return;
-  }
-
-  // PRISMA_QUERY_ENGINE_LIBRARY env'ini set et
-  process.env.PRISMA_QUERY_ENGINE_LIBRARY = sourcePath;
-  console.log("> [prisma] PRISMA_QUERY_ENGINE_LIBRARY =", sourcePath);
-
-  // Standalone .prisma/client dizinine kopyala (varsa)
-  const targetCandidates = [
-    path.join(
-      standaloneDir,
-      "node_modules",
-      ".pnpm",
-      "@prisma+client@5.22.0_prisma@5.22.0",
-      "node_modules",
-      ".prisma",
-      "client"
-    ),
-    path.join(standaloneDir, "node_modules", ".prisma", "client"),
-  ];
-
-  for (const targetDir of targetCandidates) {
-    if (fs.existsSync(targetDir)) {
-      const targetPath = path.join(targetDir, rhelBinary);
-      if (!fs.existsSync(targetPath)) {
-        try {
-          fs.copyFileSync(sourcePath, targetPath);
-          console.log("> [prisma] RHEL binary kopyalandi:", targetPath);
-        } catch (err) {
-          console.warn("> [prisma] Binary kopyalama hatasi:", err.message);
-        }
-      } else {
-        console.log("> [prisma] RHEL binary zaten mevcut:", targetPath);
-      }
     }
   }
 }
 
-setupPrismaEngine();
+setupPrismaModules();
 
 // ---------------------------------------------------------------------------
 // Adim 4: Standalone server.js'i calistir
 // ---------------------------------------------------------------------------
 
 // HOSTNAME'i her zaman 0.0.0.0 yap — tum interface'lerde dinle
-// (Plesk sistem HOSTNAME'i override edebilir, bu yuzden zorla set ediyoruz)
 process.env.HOSTNAME = "0.0.0.0";
 process.env.PORT = process.env.PORT || "3000";
 
