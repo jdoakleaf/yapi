@@ -48,6 +48,7 @@ function runMigrations() {
       stdio: "inherit",
       cwd: __dirname,
       env: process.env,
+      timeout: 30000, // 30 saniye — asmasi durumunda devam et
     });
     console.log("> [migration] Migration tamamlandi.");
   } catch (err) {
