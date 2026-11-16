@@ -180,7 +180,9 @@ setupPrismaEngine();
 // Adim 4: Standalone server.js'i calistir
 // ---------------------------------------------------------------------------
 
-process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
+// HOSTNAME'i her zaman 0.0.0.0 yap — tum interface'lerde dinle
+// (Plesk sistem HOSTNAME'i override edebilir, bu yuzden zorla set ediyoruz)
+process.env.HOSTNAME = "0.0.0.0";
 process.env.PORT = process.env.PORT || "3000";
 
 console.log(
