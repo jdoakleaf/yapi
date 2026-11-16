@@ -1,8 +1,7 @@
-allowBuilds:
-  sharp: false
-  unrs-resolver: false
-  esbuild: true
-  prisma: true
-  "@prisma/client": true
-  "@prisma/engines": true
-  "@embedded-postgres/windows-x64": true
+onlyBuiltDependencies:
+  - esbuild
+  - prisma
+  - "@prisma/client"
+  - "@prisma/engines"
+  - sharp
+  - "@img/sharp-libvips-linux-x64"
