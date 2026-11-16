@@ -3,20 +3,15 @@
 // Plesk → Node.js panelinde "Application startup file" olarak tanimlanir.
 // PORT ortam degiskenini Plesk otomatik atar.
 //
-// next.config.ts → output:"standalone" KALDIRILDI.
-// Ana node_modules kullanilir (sunucuda pnpm install ile Linux binary kuruldu).
+// next.config.ts → output:"standalone" kullanilir.
+// SWC binary gerekmez; pre-compiled standalone server calistirilir.
+// Prisma RHEL binary schema.prisma binaryTargets ile dahil edilmistir.
 
 "use strict";
 
-const { createServer } = require("http");
-const { parse } = require("url");
 const path = require("path");
+const fs = require("fs");
 const { execSync } = require("child_process");
-const next = require("next");
-
-const dev = process.env.NODE_ENV !== "production";
-const hostname = process.env.HOSTNAME || "0.0.0.0";
-const port = parseInt(process.env.PORT || "3000", 10);
 
 // ---------------------------------------------------------------------------
 // Adim 1: Veritabani migration
@@ -28,12 +23,11 @@ function runMigrations() {
     return;
   }
 
-  const isWin = process.platform === "win32";
   const prismaBin = path.join(
     __dirname,
     "node_modules",
     ".bin",
-    isWin ? "prisma.cmd" : "prisma"
+    "prisma"
   );
 
   try {
@@ -54,31 +48,45 @@ function runMigrations() {
 runMigrations();
 
 // ---------------------------------------------------------------------------
-// Adim 2: Next.js custom server (standalone DEGIL)
-// Ana node_modules kullanilir → Linux Prisma binary otomatik bulunur.
+// Adim 2: Standalone icin static dosyalari kopyala (yoksa)
 // ---------------------------------------------------------------------------
 
-const app = next({ dev, hostname, port });
-const handle = app.getRequestHandler();
+function copyDirIfMissing(src, dst) {
+  if (!fs.existsSync(src)) {
+    console.warn("> [setup] Kaynak dizin bulunamadi:", src);
+    return;
+  }
+  if (fs.existsSync(dst)) {
+    return; // Zaten kopyalanmis
+  }
+  try {
+    fs.cpSync(src, dst, { recursive: true });
+    console.log("> [setup] Kopyalandi:", src, "->", dst);
+  } catch (err) {
+    console.warn("> [setup] Kopyalama hatasi:", err.message);
+  }
+}
 
-app.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      const parsedUrl = parse(req.url, true);
-      await handle(req, res, parsedUrl);
-    } catch (err) {
-      console.error("Hata:", req.url, err);
-      res.statusCode = 500;
-      res.end("Sunucu hatasi");
-    }
-  })
-    .once("error", (err) => {
-      console.error(err);
-      process.exit(1);
-    })
-    .listen(port, () => {
-      console.log(
-        `> Yapi Platform hazir: http://${hostname}:${port} [${process.env.NODE_ENV}]`
-      );
-    });
-});
+const standaloneDir = path.join(__dirname, ".next", "standalone");
+
+copyDirIfMissing(
+  path.join(__dirname, ".next", "static"),
+  path.join(standaloneDir, ".next", "static")
+);
+copyDirIfMissing(
+  path.join(__dirname, "public"),
+  path.join(standaloneDir, "public")
+);
+
+// ---------------------------------------------------------------------------
+// Adim 3: Standalone server.js'i calistir
+// ---------------------------------------------------------------------------
+
+process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
+process.env.PORT = process.env.PORT || "3000";
+
+console.log(
+  `> Standalone server baslatiliyor: PORT=${process.env.PORT} ENV=${process.env.NODE_ENV}`
+);
+
+require(path.join(__dirname, ".next", "standalone", "server.js"));

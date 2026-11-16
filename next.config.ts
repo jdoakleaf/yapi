@@ -47,8 +47,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
-  // NOT: output:"standalone" kaldirildi — Plesk custom server ile uyumsuz.
-  // Sunucudaki ana node_modules kullanilir (Linux Prisma binary dahil).
+  // Standalone output: Plesk deployment icin gerekli.
+  // SWC binary olmadan calisir (eski GLIBC sunucular icin).
+  // Prisma RHEL binary schema.prisma binaryTargets ile dahil edilir.
+  output: "standalone",
   turbopack: {
     rules: {
       "*.css": {
