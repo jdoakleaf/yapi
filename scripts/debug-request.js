@@ -25,10 +25,11 @@ serverProcess.stderr.on("data", (d) => {
 
 // 3 saniye bekle, server baslasin, sonra istek at
 setTimeout(() => {
-  console.log("\n--> ISTEK GONDERILIYOR: http://127.0.0.1:3001/ ...");
+  console.log("\n--> ISTEK GONDERILIYOR: http://127.0.0.1:3001/api/health ...");
   
-  const req = http.get("http://127.0.0.1:3001/", (res) => {
+  const req = http.get("http://127.0.0.1:3001/api/health", (res) => {
     console.log("RESPONSE STATUS:", res.statusCode);
+    console.log("RESPONSE HEADERS:", JSON.stringify(res.headers, null, 2));
     let body = "";
     res.on("data", (c) => (body += c));
     res.on("end", () => {
